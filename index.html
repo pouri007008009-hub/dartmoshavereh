@@ -61,6 +61,24 @@ body.theme-lastminute {
   --bg-soft: #faf5ff;
 }
 
+/* حالت تیره سراسری */
+body.dark-mode {
+  --bg: #050816;
+  --bg-soft: #020617;
+  --card-bg: #0b1020;
+  --card-elevated: #020617;
+  --border-soft: #1f2937;
+  --border-strong: #374151;
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+  --text-softer: #6b7280;
+  --danger-soft: rgba(239, 68, 68, 0.16);
+  --success-soft: rgba(34, 197, 94, 0.18);
+  --input-bg: #020617;
+  --shadow-soft: 0 25px 80px rgba(0, 0, 0, 0.85);
+  --shadow-subtle: 0 18px 40px rgba(15, 23, 42, 0.7);
+}
+
 *,
 *::before,
 *::after {
@@ -72,8 +90,8 @@ body {
   padding: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma,
     sans-serif;
-  background: radial-gradient(circle at top left, #e0f2fe 0, transparent 40%),
-    radial-gradient(circle at bottom right, #e5e7eb 0, transparent 45%),
+  background: radial-gradient(circle at top left, rgba(129,140,248,0.25) 0, transparent 40%),
+    radial-gradient(circle at bottom right, rgba(236,72,153,0.18) 0, transparent 45%),
     var(--bg);
   color: var(--text-main);
 }
@@ -90,6 +108,11 @@ body {
   border: 1px solid rgba(148, 163, 184, 0.16);
 }
 
+body.dark-mode .container {
+  background: radial-gradient(circle at top, #020617 0, #020617 60%);
+  border-color: rgba(15, 23, 42, 0.9);
+}
+
 /* لاگین کارت */
 
 #loginContainer {
@@ -97,6 +120,10 @@ body {
   margin-top: 60px;
   padding: 28px 26px 26px 26px;
   border-radius: 24px;
+}
+
+body.dark-mode #loginContainer {
+  background: radial-gradient(circle at top, #0b1120 0, #020617 65%);
 }
 
 #loginContainer h2 {
@@ -147,11 +174,11 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #f3f4ff;
+  background: var(--primary-soft);
   border-radius: 999px;
   padding: 6px 10px;
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--text-main);
   border: 1px solid rgba(129, 140, 248, 0.4);
 }
 
@@ -197,6 +224,13 @@ section {
   box-shadow: var(--shadow-subtle);
 }
 
+body.dark-mode section {
+  background: radial-gradient(circle at top left, rgba(79,70,229,0.18), transparent 50%),
+              radial-gradient(circle at bottom right, rgba(236,72,153,0.18), transparent 55%),
+              var(--card-bg);
+  border-color: rgba(31,41,55,0.9);
+}
+
 section h3 {
   margin-top: 0;
   margin-bottom: 4px;
@@ -237,6 +271,7 @@ textarea {
   background: var(--input-bg);
   transition: border-color 0.15s ease, box-shadow 0.15s ease,
     background-color 0.15s ease;
+  color: var(--text-main);
 }
 
 input:focus,
@@ -245,6 +280,12 @@ textarea:focus {
   border-color: var(--primary);
   background: #ffffff;
   box-shadow: 0 0 0 1px var(--primary-soft);
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus {
+  background: #020617;
 }
 
 input[type="number"] {
@@ -347,8 +388,17 @@ th {
   color: var(--text-main);
 }
 
+body.dark-mode .table-soft th {
+  background: #020617;
+  color: #e5e7eb;
+}
+
 table tr:nth-child(even) td {
   background: rgba(249, 250, 251, 0.9);
+}
+
+body.dark-mode table tr:nth-child(even) td {
+  background: #020617;
 }
 
 .sub-table th {
@@ -408,6 +458,11 @@ table tr:nth-child(even) td {
   border: 1px dashed rgba(209, 213, 219, 0.9);
 }
 
+body.dark-mode .task-block {
+  background: #020617;
+  border-color: rgba(75,85,99,0.9);
+}
+
 .task-block:last-child {
   margin-bottom: 0;
 }
@@ -453,6 +508,53 @@ table tr:nth-child(even) td {
   margin-top: 8px;
 }
 
+body.dark-mode .exam-card {
+  background: #020617;
+}
+
+/* ویزارد آزمون شخصیت */
+
+.personality-step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.personality-progress {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.35);
+  overflow: hidden;
+}
+
+.personality-progress-inner {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary), #ec4899);
+  transition: width 0.2s ease;
+}
+
+.personality-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.personality-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.personality-actions .small-btn {
+  min-width: 80px;
+}
+
 /* ریسپانسیو */
 
 @media (max-width: 768px) {
@@ -495,7 +597,8 @@ table tr:nth-child(even) td {
       <span class="logo-dot"></span>
       <span>برنامه‌ریز ۱۴ روزه کنکور</span>
     </h1>
-    <div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <button class="small-btn" id="modeToggleBtn" onclick="toggleMode()">🌙 حالت تیره</button>
       <span id="currentUserEmail" class="user-chip"></span>
       <button class="small-btn" onclick="logout()">خروج</button>
     </div>
@@ -518,6 +621,13 @@ table tr:nth-child(even) td {
         این آزمون برای تیپ‌بندی سبک مطالعه شماست تا برنامه‌ها بر اساس شخصیتتان تنظیم شوند.
         لطفاً به همه‌ی سؤالات با دقت و صداقت پاسخ بده.
       </p>
+
+      <div class="personality-step-header">
+        <span id="personalityStepLabel">سؤال ۱ از ۱۶</span>
+        <div class="personality-progress">
+          <div id="personalityProgressInner" class="personality-progress-inner"></div>
+        </div>
+      </div>
 
       <table class="personality-table table-soft">
         <tr>
@@ -690,6 +800,11 @@ table tr:nth-child(even) td {
           <td><input type="radio" name="q16" value="5"></td>
         </tr>
       </table>
+
+      <div class="personality-actions">
+        <button type="button" class="small-btn" id="personalityPrevBtn">قبلی</button>
+        <button type="button" class="btn" id="personalityNextBtn">سؤال بعدی</button>
+      </div>
 
       <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn" onclick="computePersonality()">محاسبه تیپ</button>
@@ -974,7 +1089,7 @@ table tr:nth-child(even) td {
 
 </div>
 
-<!-- Supabase + JS همان الگوریتم قبلی + چند خط برای تم شخصیتی  -->
+<!-- Supabase + JS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ====== تنظیمات Supabase ======
@@ -1040,6 +1155,10 @@ var personalityConfig = {
   q16:{lastminute:2}
 };
 
+// متغیرهای ویزارد آزمون شخصیت
+var personalityRows = [];
+var personalityCurrent = 0;
+
 // ===== تم شخصیتی (جدید) =====
 function applyPersonalityTheme(type){
   var body = document.body;
@@ -1048,6 +1167,114 @@ function applyPersonalityTheme(type){
   else if(type === "runner") body.classList.add("theme-runner");
   else if(type === "lastminute") body.classList.add("theme-lastminute");
   else body.classList.add("theme-steady");
+}
+
+// ===== دارک‌مود =====
+function applyModeFromStorage(){
+  var body = document.body;
+  var mode = localStorage.getItem("planner-mode") || "dark";
+  if(mode === "dark"){
+    body.classList.add("dark-mode");
+  } else {
+    body.classList.remove("dark-mode");
+  }
+  updateModeToggleText();
+}
+
+function toggleMode(){
+  var body = document.body;
+  var isDark = !body.classList.contains("dark-mode");
+  if(isDark){
+    body.classList.add("dark-mode");
+    localStorage.setItem("planner-mode","dark");
+  }else{
+    body.classList.remove("dark-mode");
+    localStorage.setItem("planner-mode","light");
+  }
+  updateModeToggleText();
+}
+
+function updateModeToggleText(){
+  var btn = document.getElementById("modeToggleBtn");
+  if(!btn) return;
+  if(document.body.classList.contains("dark-mode")){
+    btn.textContent = "☀ حالت روشن";
+  } else {
+    btn.textContent = "🌙 حالت تیره";
+  }
+}
+
+// ویزارد آزمون شخصیت
+function initPersonalityWizard(){
+  var table = document.querySelector(".personality-table");
+  if(!table) return;
+  var trs = Array.from(table.querySelectorAll("tr"));
+  personalityRows = trs.slice(1);
+  if(!personalityRows.length) return;
+  personalityCurrent = 0;
+  updatePersonalityWizardUI();
+
+  var prevBtn = document.getElementById("personalityPrevBtn");
+  var nextBtn = document.getElementById("personalityNextBtn");
+  if(prevBtn){
+    prevBtn.onclick = function(){
+      if(personalityCurrent>0){
+        personalityCurrent--;
+        updatePersonalityWizardUI();
+      }
+    };
+  }
+  if(nextBtn){
+    nextBtn.onclick = function(){
+      if(!isCurrentQuestionAnswered()){
+        alert("لطفاً به این سؤال پاسخ بده بعد برو سراغ بعدی 🙂");
+        return;
+      }
+      if(personalityCurrent < personalityRows.length-1){
+        personalityCurrent++;
+        updatePersonalityWizardUI();
+      }else{
+        computePersonality();
+      }
+    };
+  }
+}
+
+function isCurrentQuestionAnswered(){
+  var row = personalityRows[personalityCurrent];
+  if(!row) return true;
+  var radios = row.querySelectorAll('input[type="radio"]');
+  for(var i=0;i<radios.length;i++){
+    if(radios[i].checked) return true;
+  }
+  return false;
+}
+
+function updatePersonalityWizardUI(){
+  if(!personalityRows || !personalityRows.length) return;
+
+  personalityRows.forEach(function(tr){ tr.style.display="none"; });
+  var row = personalityRows[personalityCurrent];
+  if(row) row.style.display="";
+
+  var stepLabel = document.getElementById("personalityStepLabel");
+  var progInner = document.getElementById("personalityProgressInner");
+  var prevBtn = document.getElementById("personalityPrevBtn");
+  var nextBtn = document.getElementById("personalityNextBtn");
+
+  var total = personalityRows.length;
+  var step = personalityCurrent + 1;
+
+  if(stepLabel) stepLabel.textContent = "سؤال "+step+" از "+total;
+  if(progInner) progInner.style.width = (step*100/total)+"%";
+  if(prevBtn) prevBtn.disabled = (personalityCurrent===0);
+  if(nextBtn){
+    if(personalityCurrent===total-1){
+      nextBtn.textContent = "مشاهده نتیجه";
+    }else{
+      nextBtn.textContent = "سؤال بعدی";
+    }
+  }
 }
 
 // ===== تب‌ها =====
@@ -1249,6 +1476,8 @@ function getDateLabelsFromProgramDate(programDateStr){
 // ===== ساخت جدول وضعیت مدرسه =====
 document.addEventListener("DOMContentLoaded", function(){
   applyPersonalityTheme("steady");
+  applyModeFromStorage();
+  initPersonalityWizard();
 
   var attBody=document.getElementById("attendanceBody");
   for(var d=1;d<=14;d++){
