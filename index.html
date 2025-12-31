@@ -1,0 +1,2670 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>برنامه‌ریز ۱۴ روزه کنکور</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  font-family:tahoma,system-ui;
+  background:#f0f2f5;
+  margin:0;
+  padding:0;
+}
+.container{
+  max-width:1200px;
+  margin:20px auto 40px auto;
+  background:#fff;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 0 25px rgba(0,0,0,.12);
+}
+h1,h2,h3{margin-top:0;}
+section{
+  border:1px solid #ddd;
+  border-radius:10px;
+  padding:12px 14px;
+  margin-bottom:15px;
+}
+label{font-size:12px;}
+input,select,textarea{
+  padding:5px 7px;
+  margin:3px 0 7px 0;
+  border-radius:6px;
+  border:1px solid #aaa;
+  font-size:12px;
+}
+input[type="number"]{width:80px;}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+}
+th,td{
+  border:1px solid #ccc;
+  padding:4px 6px;
+  vertical-align:top;
+}
+th{background:#111;color:#fff;}
+.sub-table th{font-size:11px;padding:3px;}
+.row-flex{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.row-flex > div{min-width:140px;}
+.btn{
+  background:#005bff;
+  color:#fff;
+  border:none;
+  padding:6px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+}
+.btn:hover{background:#0040c2;}
+.small-btn{
+  background:#555;
+  color:#fff;
+  border:none;
+  padding:3px 8px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:11px;
+}
+.small-btn.del{background:#b30000;}
+.small-btn.del:hover{background:#7a0000;}
+.task-block{margin-bottom:6px;}
+#scheduleTable{margin-top:10px;}
+.badge{
+  display:inline-block;
+  padding:2px 6px;
+  border-radius:10px;
+  font-size:10px;
+  background:#eee;
+  margin-left:4px;
+}
+.badge.done{background:#c8f7c5;color:#055;}
+.badge.todo{background:#ffe3c2;color:#663;}
+.badge.partial{background:#ffe9ff;color:#803380;}
+.hidden{display:none;}
+#coverageSummary{font-size:11px;margin-top:6px;color:#333;}
+.personality-table td{border:none;padding:4px 6px;}
+.personality-table th{background:#222;}
+.personality-scale-header{
+  font-size:11px;
+  text-align:center;
+  color:#fff;
+}
+</style>
+</head>
+<body>
+
+<!-- لاگین -->
+<div id="loginContainer" class="container">
+  <h2 style="text-align:center;margin-bottom:10px;">ورود به سامانه برنامه‌ریز</h2>
+  <div style="max-width:320px;margin:auto;">
+    <label>ایمیل</label><br>
+    <input id="loginEmail" type="email" placeholder="مثلاً student@example.com" style="width:100%;"><br>
+    <label>پسورد (حداقل ۶ کاراکتر)</label><br>
+    <input id="loginPassword" type="password" style="width:100%;"><br>
+    <button class="btn" style="width:100%;margin-top:6px;" onclick="handleLogin()">ورود</button>
+    <div id="loginStatus" style="font-size:11px;color:#b30000;margin-top:6px;"></div>
+  </div>
+</div>
+
+<!-- اپ اصلی -->
+<div id="appContainer" class="container hidden">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h1 style="background:#111;color:#fff;padding:10px 14px;border-radius:10px;">
+      برنامه‌ریز ۱۴ روزه کنکور
+    </h1>
+    <div>
+      <span id="currentUserEmail" style="font-size:12px;color:#555;margin-left:10px;"></span>
+      <button class="small-btn" onclick="logout()">خروج</button>
+    </div>
+  </div>
+
+  <!-- تب‌ها -->
+  <div style="margin-bottom:12px;">
+    <button class="btn" onclick="showTab('personalityTab')">🧬 آزمون شخصیت</button>
+    <button class="btn" onclick="showTab('plannerTab')">🧠 ساخت برنامه</button>
+    <button class="btn" onclick="showTab('studentTab')">✅ برنامه‌های من</button>
+    <button class="btn" onclick="showTab('backlogTab')">📦 عقب‌ماندگی‌ها</button>
+    <button class="btn" id="adminTabBtn" style="display:none;" onclick="showTab('adminTab')">🛠 پنل ادمین</button>
+  </div>
+
+  <!-- تب آزمون شخصیت -->
+  <div id="personalityTab">
+    <section>
+      <h3>🧬 آزمون شخصیت مطالعه</h3>
+      <p id="personalityInfo" style="font-size:11px;color:#444;">
+        این آزمون برای تیپ‌بندی سبک مطالعه شماست تا برنامه‌ها بر اساس شخصیتتان تنظیم شوند.
+        لطفاً به همه‌ی سؤالات با دقت و صداقت پاسخ بده.
+      </p>
+
+      <table class="personality-table">
+        <tr>
+          <th>سؤال</th>
+          <th class="personality-scale-header">کاملاً مخالفم</th>
+          <th class="personality-scale-header">مخالفم</th>
+          <th class="personality-scale-header">نظری ندارم</th>
+          <th class="personality-scale-header">موافقم</th>
+          <th class="personality-scale-header">کاملاً موافقم</th>
+        </tr>
+
+        <!-- ۱ -->
+        <tr>
+          <td>۱. وقتی برنامه‌ی دقیقی دارم، اگر حتی یک کارش انجام نشود، تا آخر روز فکرم درگیر می‌ماند.</td>
+          <td><input type="radio" name="q1" value="1"></td>
+          <td><input type="radio" name="q1" value="2"></td>
+          <td><input type="radio" name="q1" value="3"></td>
+          <td><input type="radio" name="q1" value="4"></td>
+          <td><input type="radio" name="q1" value="5"></td>
+        </tr>
+
+        <!-- ۲ -->
+        <tr>
+          <td>۲. اگر یک روز برنامه‌ام خراب شود، معمولاً می‌گویم «بی‌خیال، از فردا جدی شروع می‌کنم».</td>
+          <td><input type="radio" name="q2" value="1"></td>
+          <td><input type="radio" name="q2" value="2"></td>
+          <td><input type="radio" name="q2" value="3"></td>
+          <td><input type="radio" name="q2" value="4"></td>
+          <td><input type="radio" name="q2" value="5"></td>
+        </tr>
+
+        <!-- ۳ -->
+        <tr>
+          <td>۳. ترجیح می‌دهم هر روز کمی پیش بروم تا اینکه همه چیز را بگذارم برای روزهای آخر.</td>
+          <td><input type="radio" name="q3" value="1"></td>
+          <td><input type="radio" name="q3" value="2"></td>
+          <td><input type="radio" name="q3" value="3"></td>
+          <td><input type="radio" name="q3" value="4"></td>
+          <td><input type="radio" name="q3" value="5"></td>
+        </tr>
+
+        <!-- ۴ -->
+        <tr>
+          <td>۴. معمولاً بخش زیادی از درس‌هایم را نزدیک آزمون یا امتحان انجام می‌دهم.</td>
+          <td><input type="radio" name="q4" value="1"></td>
+          <td><input type="radio" name="q4" value="2"></td>
+          <td><input type="radio" name="q4" value="3"></td>
+          <td><input type="radio" name="q4" value="4"></td>
+          <td><input type="radio" name="q4" value="5"></td>
+        </tr>
+
+        <!-- ۵ -->
+        <tr>
+          <td>۵. اگر یک مبحث را کامل و بی‌نقص نبینم/نزنم، حس می‌کنم اصلاً آن مبحث را بلد نیستم.</td>
+          <td><input type="radio" name="q5" value="1"></td>
+          <td><input type="radio" name="q5" value="2"></td>
+          <td><input type="radio" name="q5" value="3"></td>
+          <td><input type="radio" name="q5" value="4"></td>
+          <td><input type="radio" name="q5" value="5"></td>
+        </tr>
+
+        <!-- ۶ -->
+        <tr>
+          <td>۶. شروع کردن برایم سخت است؛ اما وقتی شروع کنم، معمولاً جدی و متمرکز جلو می‌روم.</td>
+          <td><input type="radio" name="q6" value="1"></td>
+          <td><input type="radio" name="q6" value="2"></td>
+          <td><input type="radio" name="q6" value="3"></td>
+          <td><input type="radio" name="q6" value="4"></td>
+          <td><input type="radio" name="q6" value="5"></td>
+        </tr>
+
+        <!-- ۷ -->
+        <tr>
+          <td>۷. دوست دارم حجم برنامه‌ام طوری باشد که با خیال راحت بتوانم روزانه انجامش دهم، نه فشرده و استرسی.</td>
+          <td><input type="radio" name="q7" value="1"></td>
+          <td><input type="radio" name="q7" value="2"></td>
+          <td><input type="radio" name="q7" value="3"></td>
+          <td><input type="radio" name="q7" value="4"></td>
+          <td><input type="radio" name="q7" value="5"></td>
+        </tr>
+
+        <!-- ۸ -->
+        <tr>
+          <td>۸. بارها شده برنامه‌ریزی عالی داشته باشم، اما وسط کار بزنم زیرش و بگویم «حوصله ندارم».</td>
+          <td><input type="radio" name="q8" value="1"></td>
+          <td><input type="radio" name="q8" value="2"></td>
+          <td><input type="radio" name="q8" value="3"></td>
+          <td><input type="radio" name="q8" value="4"></td>
+          <td><input type="radio" name="q8" value="5"></td>
+        </tr>
+
+        <!-- ۹ -->
+        <tr>
+          <td>۹. از جمع شدن عقب‌ماندگی‌ها خیلی می‌ترسم و دوست دارم آن‌ها را هرچه زودتر صفر کنم.</td>
+          <td><input type="radio" name="q9" value="1"></td>
+          <td><input type="radio" name="q9" value="2"></td>
+          <td><input type="radio" name="q9" value="3"></td>
+          <td><input type="radio" name="q9" value="4"></td>
+          <td><input type="radio" name="q9" value="5"></td>
+        </tr>
+
+        <!-- ۱۰ -->
+        <tr>
+          <td>۱۰. معمولاً در روزهای آخر قبل از آزمون، بیشتر از روزهای عادی تلاش می‌کنم.</td>
+          <td><input type="radio" name="q10" value="1"></td>
+          <td><input type="radio" name="q10" value="2"></td>
+          <td><input type="radio" name="q10" value="3"></td>
+          <td><input type="radio" name="q10" value="4"></td>
+          <td><input type="radio" name="q10" value="5"></td>
+        </tr>
+
+        <!-- ۱۱ -->
+        <tr>
+          <td>۱۱. اگر برنامه خیلی فشرده باشد، احتمال این‌که رهایش کنم زیاد است.</td>
+          <td><input type="radio" name="q11" value="1"></td>
+          <td><input type="radio" name="q11" value="2"></td>
+          <td><input type="radio" name="q11" value="3"></td>
+          <td><input type="radio" name="q11" value="4"></td>
+          <td><input type="radio" name="q11" value="5"></td>
+        </tr>
+
+        <!-- ۱۲ -->
+        <tr>
+          <td>۱۲. معمولاً ترجیح می‌دهم اول عقب‌ماندگی‌هایم را جمع کنم بعد سراغ پیشروی بروم.</td>
+          <td><input type="radio" name="q12" value="1"></td>
+          <td><input type="radio" name="q12" value="2"></td>
+          <td><input type="radio" name="q12" value="3"></td>
+          <td><input type="radio" name="q12" value="4"></td>
+          <td><input type="radio" name="q12" value="5"></td>
+        </tr>
+
+        <!-- ۱۳ -->
+        <tr>
+          <td>۱۳. اهل «از همین امروز یک مقدار شروع کنم» هستم، حتی اگر حس کنم کامل آماده نیستم.</td>
+          <td><input type="radio" name="q13" value="1"></td>
+          <td><input type="radio" name="q13" value="2"></td>
+          <td><input type="radio" name="q13" value="3"></td>
+          <td><input type="radio" name="q13" value="4"></td>
+          <td><input type="radio" name="q13" value="5"></td>
+        </tr>
+
+        <!-- ۱۴ -->
+        <tr>
+          <td>۱۴. وقتی استرس می‌گیرم، تمایل دارم بعضی کارها را هی عقب بیندازم.</td>
+          <td><input type="radio" name="q14" value="1"></td>
+          <td><input type="radio" name="q14" value="2"></td>
+          <td><input type="radio" name="q14" value="3"></td>
+          <td><input type="radio" name="q14" value="4"></td>
+          <td><input type="radio" name="q14" value="5"></td>
+        </tr>
+
+        <!-- ۱۵ -->
+        <tr>
+          <td>۱۵. ترجیح می‌دهم به‌جای جمع کردن کارها، هر روز مقدار مشخصی کار ثابت داشته باشم.</td>
+          <td><input type="radio" name="q15" value="1"></td>
+          <td><input type="radio" name="q15" value="2"></td>
+          <td><input type="radio" name="q15" value="3"></td>
+          <td><input type="radio" name="q15" value="4"></td>
+          <td><input type="radio" name="q15" value="5"></td>
+        </tr>
+
+        <!-- ۱۶ -->
+        <tr>
+          <td>۱۶. وقتی فشار امتحان نزدیک می‌شود، تازه حس می‌کنم انگیزه‌ی اصلی‌ام روشن شده.</td>
+          <td><input type="radio" name="q16" value="1"></td>
+          <td><input type="radio" name="q16" value="2"></td>
+          <td><input type="radio" name="q16" value="3"></td>
+          <td><input type="radio" name="q16" value="4"></td>
+          <td><input type="radio" name="q16" value="5"></td>
+        </tr>
+      </table>
+
+      <div style="margin-top:10px;">
+        <button class="btn" onclick="computePersonality()">محاسبه تیپ</button>
+        <button class="btn" id="savePersonalityBtn" onclick="savePersonality()" disabled>ثبت تیپ در حساب من</button>
+      </div>
+      <div id="personalityResult" style="font-size:12px;color:#333;margin-top:8px;"></div>
+    </section>
+  </div>
+
+  <!-- تب برنامه‌ریز -->
+  <div id="plannerTab" class="hidden">
+
+    <!-- ۰. نوع برنامه -->
+    <section>
+      <h3>۰. انتخاب نوع برنامه</h3>
+      <p style="font-size:11px;color:#444">
+        🔹 <b>برنامه عادی:</b> بدون استفاده از تیپ شخصیت، الگوریتم پایه و یکنواخت.<br>
+        🔹 <b>برنامه بر اساس تیپ شخصیت:</b> از تیپ ثبت‌شده در آزمون استفاده می‌کند
+        (وسواسی، پرتلاش‌فرار، آهسته‌پیوسته، دقیقه‌نودی) و همان تغییراتی که گفتی اعمال می‌شود.<br>
+        🔹 گزینه‌ی «هوش مصنوعی» را بعداً کامل می‌کنیم.
+      </p>
+      <label>نوع برنامه:</label>
+      <select id="planMode">
+        <option value="normal">برنامه عادی</option>
+        <option value="personality">برنامه بر اساس تیپ شخصیت</option>
+        <option value="ai" disabled>برنامه بر اساس هوش مصنوعی (به زودی)</option>
+      </select>
+    </section>
+
+    <!-- ۱. اطلاعات پایه -->
+    <section>
+      <h3>۱. اطلاعات پایه دانش‌آموز</h3>
+      <p style="font-size:11px;color:#b30000;">همۀ فیلدهای این بخش اجباری هستند.</p>
+      <div class="row-flex">
+        <div>
+          <label>نام</label><br>
+          <input id="fname" type="text">
+        </div>
+        <div>
+          <label>نام خانوادگی</label><br>
+          <input id="lname" type="text">
+        </div>
+        <div>
+          <label>شماره موبایل</label><br>
+          <input id="phone" type="text" placeholder="مثلاً 09123456789">
+        </div>
+        <div>
+          <label>شهر</label><br>
+          <input id="city" type="text">
+        </div>
+        <div>
+          <label>نام مدرسه</label><br>
+          <input id="school" type="text">
+        </div>
+        <div>
+          <label>پایه تحصیلی</label><br>
+          <select id="grade">
+            <option value="">انتخاب کنید</option>
+            <option>دهم</option>
+            <option>یازدهم</option>
+            <option>دوازدهم</option>
+          </select>
+        </div>
+        <div>
+          <label>رشته تحصیلی</label><br>
+          <select id="major">
+            <option value="">انتخاب کنید</option>
+            <option>تجربی</option>
+            <option>ریاضی</option>
+            <option>انسانی</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- ۲. ساعات مطالعه کلی -->
+    <section>
+      <h3>۲. ساعات مطالعه کلی</h3>
+      <div class="row-flex">
+        <div>
+          <label>ساعت مطالعه در روز سفید (بدون مدرسه و کلاس)</label><br>
+          <input id="whiteDay" type="number" step="0.5" min="0" max="15" value="8">
+        </div>
+        <div>
+          <label>ساعت مطالعه در روز مدرسه (بدون کلاس بیرون)</label><br>
+          <input id="schoolDay" type="number" step="0.5" min="0" max="10" value="4">
+        </div>
+      </div>
+    </section>
+
+    <!-- ۳. وضعیت مدرسه -->
+    <section>
+      <h3>۳. وضعیت مدرسه در ۱۴ روز آینده</h3>
+      <table class="sub-table">
+        <tr><th>روز</th><th>می‌رود مدرسه؟</th></tr>
+        <tbody id="attendanceBody"></tbody>
+      </table>
+    </section>
+
+    <!-- ۴. کلاس‌های آنلاین -->
+    <section>
+      <h3>۴. کلاس‌های آنلاین</h3>
+      <p style="font-size:11px;color:#444">
+        کلاس‌های آنلاین هم به‌صورت تسک در برنامه می‌آیند؛ اگر تیک نخوری، در برنامه بعدی به‌عنوان فیلم آفلاین عقب‌افتاده حساب می‌شوند.
+      </p>
+      <button class="small-btn" onclick="addClassRow()">➕ افزودن کلاس</button>
+      <table class="sub-table">
+        <tr>
+          <th>روز</th><th>درس</th><th>مدت (ساعت)</th><th>فصل</th><th>حذف</th>
+        </tr>
+        <tbody id="classesBody"></tbody>
+      </table>
+    </section>
+
+    <!-- ۵. آزمون‌ها -->
+    <section>
+      <h3>۵. آزمون‌ها در ۱۴ روز آینده</h3>
+      <p style="font-size:11px;color:#444">
+        برای هر آزمون، می‌توانی چند فصل و چند منبع تست تعریف کنی و اگر بخواهی تحلیل آزمون هم انجام شود.
+      </p>
+      <button class="small-btn" onclick="addExamCard()">➕ افزودن آزمون</button>
+      <div id="examsCards"></div>
+    </section>
+
+    <!-- ۶. فیلم‌های آفلاین -->
+    <section>
+      <h3>۶. فیلم‌های آفلاین عقب‌افتاده</h3>
+      <p style="font-size:11px;color:#444">
+        اینجا ترکیب عقب‌ماندگی‌های قدیمی + مواردی است که خودت اضافه می‌کنی. قبل از ساخت برنامه، می‌توانی چیزهایی را که دیگر عقب‌مانده نیست حذف کنی.
+      </p>
+      <button class="small-btn" onclick="addOfflineRow()">➕ افزودن فیلم آفلاین</button>
+      <table class="sub-table">
+        <tr>
+          <th>درس</th><th>فصل</th><th>مدت (ساعت)</th><th>حذف</th>
+        </tr>
+        <tbody id="offlineBody"></tbody>
+      </table>
+    </section>
+
+    <!-- ۷. تست‌های عقب‌مانده -->
+    <section>
+      <h3>۷. تست‌های عقب‌مانده</h3>
+      <p style="font-size:11px;color:#444">
+        این هم ترکیب تست‌هایی است که از برنامه‌های قبلی جا مانده + تست‌هایی که خودت به عنوان عقب‌ماندگی تعریف می‌کنی.
+      </p>
+      <button class="small-btn" onclick="addLagRow()">➕ افزودن تست عقب‌مانده</button>
+      <table class="sub-table">
+        <tr>
+          <th>درس</th><th>فصل</th><th>منبع تست</th><th>تعداد تست</th><th>حذف</th>
+        </tr>
+        <tbody id="lagBody"></tbody>
+      </table>
+    </section>
+
+    <!-- ۸. پیشروی -->
+    <section>
+      <h3>۸. پیشروی پیشنهادی</h3>
+      <button class="small-btn" onclick="addProgRow()">➕ افزودن هدف پیشروی</button>
+      <table class="sub-table">
+        <tr>
+          <th>درس</th><th>فصل</th><th>منبع تست</th><th>تعداد تست</th><th>حذف</th>
+        </tr>
+        <tbody id="progBody"></tbody>
+      </table>
+    </section>
+
+    <!-- ۹. ترازها -->
+    <section>
+      <h3>۹. تراز/درصد میانگین دروس اختصاصی</h3>
+      <p style="font-size:11px;color:#444">برای تشخیص نقطه قوت و ضعف.</p>
+      <div class="row-flex">
+        <div>
+          <label>تراز زیست</label><br>
+          <input id="rankBio" type="number" step="10">
+        </div>
+        <div>
+          <label>تراز شیمی</label><br>
+          <input id="rankChem" type="number" step="10">
+        </div>
+        <div>
+          <label>تراز فیزیک</label><br>
+          <input id="rankPhys" type="number" step="10">
+        </div>
+        <div>
+          <label>تراز ریاضی</label><br>
+          <input id="rankMath" type="number" step="10">
+        </div>
+      </div>
+    </section>
+
+    <!-- ۱۰. ساخت برنامه -->
+    <section>
+      <h3>۱۰. ساخت برنامه</h3>
+      <button class="btn" onclick="onMakePlanClicked()">✅ ساخت برنامه ۱۴ روزه و ذخیره در Supabase</button>
+      <span id="statusMsg" style="font-size:11px;color:#b30000;margin-right:10px;"></span>
+    </section>
+
+    <!-- نمایش برنامه -->
+    <section>
+      <h3>برنامه ۱۴ روزه</h3>
+      <div id="coverageSummary"></div>
+      <table id="scheduleTable"></table>
+    </section>
+
+  </div>
+
+  <!-- تب برنامه‌های من (دانش‌آموز) -->
+  <div id="studentTab" class="hidden">
+    <section>
+      <h3>برنامه‌های من</h3>
+      <p style="font-size:11px;color:#444">
+        روی هر برنامه کلیک کن تا تسک‌های همان برنامه را ببینی و تیک بزنی.
+      </p>
+      <table id="studentPlansTable" class="sub-table"></table>
+    </section>
+
+    <section>
+      <h3>تسک‌های برنامه انتخاب‌شده</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <p id="studentTasksInfo" style="font-size:11px;color:#444;margin:0;"></p>
+        <div style="font-size:11px;">
+          فیلتر روز:
+          <select id="studentDayFilter" onchange="renderStudentTasksFiltered()">
+            <option value="all">همه روزها</option>
+            <option value="1">روز ۱</option>
+            <option value="2">روز ۲</option>
+            <option value="3">روز ۳</option>
+            <option value="4">روز ۴</option>
+            <option value="5">روز ۵</option>
+            <option value="6">روز ۶</option>
+            <option value="7">روز ۷</option>
+            <option value="8">روز ۸</option>
+            <option value="9">روز ۹</option>
+            <option value="10">روز ۱۰</option>
+            <option value="11">روز ۱۱</option>
+            <option value="12">روز ۱۲</option>
+            <option value="13">روز ۱۳</option>
+            <option value="14">روز ۱۴</option>
+          </select>
+          <button class="small-btn" onclick="showInstantReport()">📊 گزارش لحظه‌ای</button>
+        </div>
+      </div>
+      <table id="studentTasksTable" class="sub-table"></table>
+      <div id="instantReportBox" style="font-size:11px;color:#333;margin-top:6px;"></div>
+    </section>
+  </div>
+
+  <!-- تب عقب‌ماندگی‌ها -->
+  <div id="backlogTab" class="hidden">
+    <section>
+      <h3>📦 عقب‌ماندگی‌های ثبت شده</h3>
+      <p style="font-size:11px;color:#444">
+        این‌ها تسک‌هایی هستند که تاریخ‌شان گذشته و کامل انجام نشده‌اند (انجام‌نشده یا ناقص).
+        برای برنامه بعدی، از این‌ها به عنوان عقب‌ماندگی استفاده می‌شود.
+      </p>
+      <button class="small-btn" onclick="loadBacklogView()">🔄 به‌روزرسانی لیست عقب‌ماندگی</button>
+      <table id="backlogTable" class="sub-table"></table>
+    </section>
+  </div>
+
+  <!-- تب پنل ادمین -->
+  <div id="adminTab" class="hidden">
+    <section>
+      <h3>لیست برنامه‌های دانش‌آموزان</h3>
+      <table id="adminPlansTable" class="sub-table"></table>
+    </section>
+    <section>
+      <h3>تسک‌های برنامه انتخاب‌شده</h3>
+      <p id="adminPlanTitle" style="font-size:11px;color:#444;"></p>
+      <table id="adminTasksTable" class="sub-table"></table>
+
+      <div style="margin-top:10px;">
+        <h4>➕ افزودن تسک دستی به این برنامه</h4>
+        <label>روز (۱ تا ۱۴): </label>
+        <input id="adminNewTaskDay" type="number" min="1" max="14" value="1"><br>
+        <label>متن تسک:</label><br>
+        <textarea id="adminNewTaskText" style="width:100%;height:60px;"></textarea><br>
+        <button class="small-btn" onclick="adminAddTask()">افزودن تسک</button>
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ====== تنظیمات Supabase ======
+var supabaseUrl = "https://uregjguhgbzwgwlzqbef.supabase.co";
+var supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyZWdqZ3VoZ2J6d2d3bHpxYmVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxMTE5OTQsImV4cCI6MjA4MjY4Nzk5NH0.Gsqi4NKf4SssTVzTdC4AvIJCoynC31prHK_Gr7fZCzI";
+var supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// ایمیل ادمین
+var ADMIN_EMAILS = ["pouri007008009@gmail.com"];
+
+// وضعیت‌های تسک
+var TASK_STATUS = {
+  TODO: "todo",
+  PARTIAL: "partial",
+  DONE: "done"
+};
+
+// تیپ شخصیت فعلی کاربر (از پروفایل)
+var currentPersonalityType = null;      // "obsessive" | "runner" | "steady" | "lastminute"
+var currentPersonalityUpdated = null;   // "YYYY-MM-DD"
+var computedPersonalityType = null;
+
+var PERSONALITY_LABELS = {
+  obsessive: "وسواسی دقیق",
+  runner: "پرتلاش اما فرار",
+  steady: "آهسته و پیوسته",
+  lastminute: "قهرمان دقیقه نودی"
+};
+
+var PERSONALITY_DESCRIPTIONS = {
+  obsessive: "تمرکز بالا روی کامل‌کردن کارها، حساس نسبت به عقب‌ماندگی و نقص در برنامه.",
+  runner: "تلاش‌گر اما فرّار از شروع؛ نیاز به مرورهای کوتاه و انگیزه‌ی مداوم.",
+  steady: "ریتم ثابت، دوست‌دار برنامه‌ی یکنواخت و بدون نوسان شدید.",
+  lastminute: "انرژی اصلی نزدیک ددلاین و آزمون روشن می‌شود؛ حجم بیشتر در هفته‌ی دوم بهتر جواب می‌دهد."
+};
+
+// این‌هارو برای رندر مجدد استفاده می‌کنیم
+var currentStudentPlanId = null;
+var currentStudentPlanDate = null;
+var currentStudentTasks = []; // {id, day, task_text, status, leftover}
+var backlogPrefilled = false;
+var currentAdminPlanId = null;
+var currentAdminStudentName = "";
+var currentAdminProgramDate = "";
+
+// ==== نقشه تأثیر سؤالات آزمون بر تیپ‌ها ====
+var personalityConfig = {
+  q1: {obsessive:2},
+  q2: {runner:2},
+  q3: {steady:2},
+  q4: {lastminute:2},
+  q5: {obsessive:2},
+  q6: {runner:1, steady:1},
+  q7: {steady:2},
+  q8: {runner:2},
+  q9: {obsessive:2},
+  q10:{lastminute:2},
+  q11:{steady:1, runner:1},
+  q12:{obsessive:1, steady:1},
+  q13:{steady:2},
+  q14:{runner:1,lastminute:1},
+  q15:{steady:2},
+  q16:{lastminute:2}
+};
+
+// ===== تب‌ها =====
+function showTab(tabId){
+  ["personalityTab","plannerTab","studentTab","backlogTab","adminTab"].forEach(function(id){
+    document.getElementById(id).classList.add("hidden");
+  });
+  document.getElementById(tabId).classList.remove("hidden");
+}
+
+// ===== لاگین =====
+async function handleLogin(){
+  var email = document.getElementById("loginEmail").value.trim();
+  var pass  = document.getElementById("loginPassword").value;
+  var status= document.getElementById("loginStatus");
+  status.style.color="#b30000";
+  status.textContent="";
+
+  if(!email){
+    status.textContent="ایمیل را وارد کن.";
+    return;
+  }
+  if(!pass || pass.length<6){
+    status.textContent="پسورد باید حداقل ۶ کاراکتر باشد.";
+    return;
+  }
+
+  var res = await supabase.auth.signInWithPassword({email:email,password:pass});
+  if(res.error){
+    status.textContent="خطا در ورود: "+res.error.message;
+    return;
+  }
+
+  document.getElementById("loginContainer").classList.add("hidden");
+  document.getElementById("appContainer").classList.remove("hidden");
+  document.getElementById("currentUserEmail").textContent = "کاربر: "+email;
+
+  if(ADMIN_EMAILS.indexOf(email)>=0){
+    document.getElementById("adminTabBtn").style.display="inline-block";
+  }
+
+  // پروفایل شخصیت را لود کن
+  await loadPersonalityProfile(email);
+
+  showTab("personalityTab");
+  loadStudentPlans();
+  if(ADMIN_EMAILS.indexOf(email)>=0){
+    loadAdminPlans();
+  }
+  prefillBacklogFromAllPlans();
+  loadBacklogView();
+}
+
+async function logout(){
+  await supabase.auth.signOut();
+  location.reload();
+}
+
+// ===== ثابت‌ها و توابع عمومی =====
+var SOURCE_MIN_PER_QUESTION = {
+  "خیلی سبز": 1.67,
+  "نردبام": 2.25,
+  "مبتکران": 2.0,
+  "نشرالگو": 1.67,
+  "سه سطحی": 1.67,
+  "QB": 2.0,
+  "موج آزمون": 1.67,
+  "فصل آزمون": 1.67,
+  "IQ": 2.0,
+  "میکرو گاج": 1.67,
+  "تیتانیوم": 2.25
+};
+
+function studyRatio(subject){
+  if(subject==="زیست")  return 0.40;
+  if(subject==="شیمی")  return 0.30;
+  if(subject==="فیزیک") return 0.20;
+  if(subject==="ریاضی") return 0.20;
+  return 0;
+}
+
+function detectStrongWeak(stats){
+  if(!stats) return {strong:"زیست",weak:"ریاضی"};
+  var arr=[];
+  if(stats.biology && stats.biology.avgRank>0)   arr.push({key:"زیست",  rank:stats.biology.avgRank});
+  if(stats.chemistry && stats.chemistry.avgRank>0) arr.push({key:"شیمی",  rank:stats.chemistry.avgRank});
+  if(stats.physics && stats.physics.avgRank>0)   arr.push({key:"فیزیک", rank:stats.physics.avgRank});
+  if(stats.math && stats.math.avgRank>0)      arr.push({key:"ریاضی", rank:stats.math.avgRank});
+  if(!arr.length) return {strong:"زیست",weak:"ریاضی"};
+  arr.sort(function(a,b){return b.rank-a.rank;});
+  return {strong:arr[0].key,weak:arr[arr.length-1].key};
+}
+
+function parseDurationToHours(str){
+  if(!str) return 0;
+  str=String(str).trim();
+  if(str.indexOf("min")>-1){
+    var m=parseInt(str,10); return m/60;
+  }
+  if(str.indexOf("h")>-1){
+    return parseFloat(str);
+  }
+  var n=parseFloat(str); return isNaN(n)?0:n;
+}
+
+function formatHoursWithMinutes(h){
+  h = Math.max(0, h);
+  var hrsFloat = h;
+  var hrs = Math.floor(hrsFloat);
+  var mins = Math.round((hrsFloat - hrs)*60);
+  if(mins % 5 !== 0){
+    mins = mins + (5 - (mins % 5));
+  }
+  if(mins === 60){
+    hrs += 1;
+    mins = 0;
+  }
+  var hText = hrsFloat.toFixed(1);
+  if(hText.endsWith(".0")) hText = hText.slice(0,-2);
+  var totalMin = hrs*60 + mins;
+  if(hrs>0 || mins>0){
+    return hText+' ساعت ('+totalMin+' دقیقه)';
+  }else{
+    return '0 دقیقه';
+  }
+}
+
+// تعداد فصل‌ها
+var SUBJECT_CHAPTER_COUNT = {
+  "زیست": 8,
+  "شیمی": 4,
+  "فیزیک": 4,
+  "ریاضی": 7,
+  "ادبیات": 18,
+  "دینی": 12,
+  "عربی": 8,
+  "زبان": 4
+};
+
+function getChapterOptionsForSubject(subj){
+  var n = SUBJECT_CHAPTER_COUNT[subj] || 10;
+  var html = "";
+  for(var i=1;i<=n;i++){
+    html += '<option value="فصل '+i+'">فصل '+i+'</option>';
+  }
+  return html;
+}
+
+function updateTopicOptions(selectEl, topicClass){
+  var subj = selectEl.value;
+  var row  = selectEl.closest("tr") || selectEl.closest(".exam-card") || selectEl.closest("div");
+  var topicSel;
+  if(topicClass){
+    topicSel = row.querySelector("."+topicClass);
+  }else{
+    topicSel = row.querySelector("select");
+  }
+  if(!topicSel) return;
+  var prev = topicSel.value;
+  topicSel.innerHTML = getChapterOptionsForSubject(subj);
+  var exists=false;
+  for(var i=0;i<topicSel.options.length;i++){
+    if(topicSel.options[i].value===prev){ exists=true; break;}
+  }
+  if(exists) topicSel.value=prev;
+}
+
+// لیبل تاریخ‌ها از روی program_date
+function getDateLabelsFromProgramDate(programDateStr){
+  if(!programDateStr) return Array(14).fill(null);
+  var parts = programDateStr.split("-");
+  var y = parseInt(parts[0],10);
+  var m = parseInt(parts[1],10)-1;
+  var d = parseInt(parts[2],10);
+  var base = new Date(y,m,d);
+  var weekdays = ["یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنج‌شنبه","جمعه","شنبه"];
+  var labels=[];
+  for(var i=1;i<=14;i++){
+    var dd = new Date(base);
+    dd.setDate(base.getDate()+i);
+    var wd = weekdays[dd.getDay()];
+    var yy = dd.getFullYear();
+    var mm = (dd.getMonth()+1).toString().padStart(2,'0');
+    var da = dd.getDate().toString().padStart(2,'0');
+    labels.push(wd+" "+yy+"/"+mm+"/"+da);
+  }
+  return labels;
+}
+
+// ===== ساخت جدول وضعیت مدرسه =====
+document.addEventListener("DOMContentLoaded", function(){
+  var attBody=document.getElementById("attendanceBody");
+  for(var d=1;d<=14;d++){
+    var tr=document.createElement("tr");
+    tr.innerHTML=
+      '<td style="text-align:center">'+d+'</td>'+
+      '<td><select class="att-select" data-day="'+d+'">'+
+      '<option value="بله">بله (مدرسه می‌رود)</option>'+
+      '<option value="خیر">خیر</option>'+
+      '</select></td>';
+    attBody.appendChild(tr);
+  }
+
+  document.getElementById("examsCards").addEventListener("click",function(e){
+    if(e.target.classList.contains("delete-exam-card")){
+      var card=e.target.closest(".exam-card");
+      if(card) card.remove();
+    }
+  });
+});
+
+// ===== افزودن ردیف‌ها =====
+function addClassRow(){
+  var tbody=document.getElementById("classesBody");
+  var tr=document.createElement("tr");
+  tr.innerHTML=
+    '<td><input type="number" class="class-day" min="1" max="14" value="1"></td>'+
+    '<td><select class="class-subject" onchange="updateTopicOptions(this, \'class-topic\')">'+
+      '<option>زیست</option><option>شیمی</option><option>فیزیک</option><option>ریاضی</option>'+
+      '<option>ادبیات</option><option>دینی</option><option>عربی</option><option>زبان</option>'+
+    '</select></td>'+
+    '<td><input type="number" step="0.5" class="class-duration" value="2"></td>'+
+    '<td><select class="class-topic"></select></td>'+
+    '<td><button type="button" class="small-btn del" onclick="this.closest(\'tr\').remove()">حذف</button></td>';
+  tbody.appendChild(tr);
+  var subjSel=tr.querySelector(".class-subject");
+  updateTopicOptions(subjSel,"class-topic");
+}
+
+function addExamCard(){
+  var container=document.getElementById("examsCards");
+  var div=document.createElement("div");
+  div.className="exam-card";
+  div.style.border="1px solid #ccc";
+  div.style.borderRadius="8px";
+  div.style.padding="8px";
+  div.style.marginTop="8px";
+  div.innerHTML=
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'+
+      '<strong>آزمون جدید</strong>'+
+      '<button type="button" class="small-btn del delete-exam-card">حذف آزمون</button>'+
+    '</div>'+
+    'روز آزمون: <input type="number" class="exam-day" min="1" max="14" value="14"> '+
+    'درس: <select class="exam-subject" onchange="refreshExamChapters(this)">'+
+      '<option>زیست</option><option>شیمی</option><option>فیزیک</option><option>ریاضی</option>'+
+      '<option>ادبیات</option><option>دینی</option><option>عربی</option><option>زبان</option>'+
+    '</select> '+
+    'نوع: <select class="exam-type">'+
+      '<option>آزمون آزمایشی</option>'+
+      '<option>امتحان مدرسه</option>'+
+      '<option>امتحان کلاس بیرون</option>'+
+    '</select> '+
+    'مدت: <select class="exam-duration">'+
+      '<option value="30min">۳۰ دقیقه</option>'+
+      '<option value="45min">۴۵ دقیقه</option>'+
+      '<option value="60min">۱ ساعت</option>'+
+      '<option value="90min">۱.۵ ساعت</option>'+
+      '<option value="120min">۲ ساعت</option>'+
+      '<option value="180min">۳ ساعت</option>'+
+    '</select>'+
+    '<br><br>'+
+    'مطالعه/تست در خود روز آزمون مجاز باشد؟ '+
+    '<input type="checkbox" class="exam-allow-today" checked> '+
+    '🔍 تحلیل آزمون؟ <input type="checkbox" class="exam-analysis-need"> '+
+    'اولین روز مجاز برای تحلیل: <input type="number" class="exam-analysis-start" min="1" max="14" value="14">'+
+    '<hr style="margin:6px 0;">'+
+    '<div><strong>فصل‌ها:</strong> <button type="button" class="small-btn" onclick="addExamChapter(this)">➕ فصل</button>'+
+    '<div class="exam-chapters-box" style="margin-top:4px;"></div></div>'+
+    '<hr style="margin:6px 0;">'+
+    '<div><strong>منابع تست:</strong> <button type="button" class="small-btn" onclick="addExamSource(this)">➕ منبع تست</button>'+
+    '<div class="exam-sources-box" style="margin-top:4px;"></div></div>';
+  container.appendChild(div);
+}
+
+function refreshExamChapters(subjSelect){
+  var card=subjSelect.closest(".exam-card");
+  var subj=subjSelect.value;
+  var boxes=card.querySelectorAll(".exam-chapter");
+  for(var i=0;i<boxes.length;i++){
+    var sel=boxes[i];
+    var prev=sel.value;
+    sel.innerHTML=getChapterOptionsForSubject(subj);
+    var exists=false;
+    for(var j=0;j<sel.options.length;j++){
+      if(sel.options[j].value===prev){exists=true;break;}
+    }
+    if(exists) sel.value=prev;
+  }
+}
+
+function addExamChapter(btn){
+  var box=btn.parentElement.querySelector(".exam-chapters-box");
+  var card=btn.closest(".exam-card");
+  var subj=card.querySelector(".exam-subject").value;
+  var d=document.createElement("div");
+  d.innerHTML=
+    'فصل: <select class="exam-chapter">'+getChapterOptionsForSubject(subj)+'</select> '+
+    '<button type="button" class="small-btn del" onclick="this.parentElement.remove()">حذف</button>';
+  box.appendChild(d);
+}
+
+function addExamSource(btn){
+  var box=btn.parentElement.querySelector(".exam-sources-box");
+  var d=document.createElement("div");
+  d.innerHTML=
+    'منبع: <select class="exam-source">'+
+      '<option>خیلی سبز</option><option>نردبام</option><option>مبتکران</option>'+
+      '<option>نشرالگو</option><option>سه سطحی</option><option>QB</option>'+
+      '<option>موج آزمون</option><option>فصل آزمون</option><option>IQ</option>'+
+      '<option>میکرو گاج</option><option>تیتانیوم</option>'+
+    '</select> '+
+    'تعداد تست: <input type="number" class="exam-count" min="10" step="10" value="100"> '+
+    '<button type="button" class="small-btn del" onclick="this.parentElement.remove()">حذف</button>';
+  box.appendChild(d);
+}
+
+function addOfflineRow(){
+  var tbody=document.getElementById("offlineBody");
+  var tr=document.createElement("tr");
+  tr.innerHTML=
+    '<td><select class="off-subject" onchange="updateTopicOptions(this, \'off-topic\')">'+
+      '<option>زیست</option><option>شیمی</option><option>فیزیک</option><option>ریاضی</option>'+
+      '<option>ادبیات</option><option>دینی</option><option>عربی</option><option>زبان</option>'+
+    '</select></td>'+
+    '<td><select class="off-topic"></select></td>'+
+    '<td><input type="number" step="0.5" class="off-hours" value="2"></td>'+
+    '<td><button type="button" class="small-btn del" onclick="this.closest(\'tr\').remove()">حذف</button></td>';
+  tbody.appendChild(tr);
+  updateTopicOptions(tr.querySelector(".off-subject"),"off-topic");
+}
+
+function addLagRow(){
+  var tbody=document.getElementById("lagBody");
+  var tr=document.createElement("tr");
+  tr.innerHTML=
+    '<td><select class="lag-subject" onchange="updateTopicOptions(this, \'lag-topic\')">'+
+      '<option>زیست</option><option>شیمی</option><option>فیزیک</option><option>ریاضی</option>'+
+    '</select></td>'+
+    '<td><select class="lag-topic"></select></td>'+
+    '<td><select class="lag-source">'+
+      '<option>خیلی سبز</option><option>نردبام</option><option>مبتکران</option>'+
+      '<option>نشرالگو</option><option>سه سطحی</option><option>QB</option>'+
+      '<option>موج آزمون</option><option>فصل آزمون</option><option>IQ</option>'+
+      '<option>میکرو گاج</option><option>تیتانیوم</option>'+
+    '</select></td>'+
+    '<td><input type="number" class="lag-count" min="10" step="10" value="80"></td>'+
+    '<td><button type="button" class="small-btn del" onclick="this.closest(\'tr\').remove()">حذف</button></td>';
+  tbody.appendChild(tr);
+  updateTopicOptions(tr.querySelector(".lag-subject"),"lag-topic");
+}
+
+function addProgRow(){
+  var tbody=document.getElementById("progBody");
+  var tr=document.createElement("tr");
+  tr.innerHTML=
+    '<td><select class="prog-subject" onchange="updateTopicOptions(this, \'prog-topic\')">'+
+      '<option>زیست</option><option>شیمی</option><option>فیزیک</option><option>ریاضی</option>'+
+    '</select></td>'+
+    '<td><select class="prog-topic"></select></td>'+
+    '<td><select class="prog-source">'+
+      '<option>خیلی سبز</option><option>نردبام</option><option>مبتکران</option>'+
+      '<option>نشرالگو</option><option>سه سطحی</option><option>QB</option>'+
+      '<option>موج آزمون</option><option>فصل آزمون</option><option>IQ</option>'+
+      '<option>میکرو گاج</option><option>تیتانیوم</option>'+
+    '</select></td>'+
+    '<td><input type="number" class="prog-count" min="10" step="10" value="100"></td>'+
+    '<td><button type="button" class="small-btn del" onclick="this.closest(\'tr\').remove()">حذف</button></td>';
+  tbody.appendChild(tr);
+  updateTopicOptions(tr.querySelector(".prog-subject"),"prog-topic");
+}
+
+// ===== توابع آزمون شخصیت =====
+function daysBetween(date1, date2){
+  try{
+    var d1 = new Date(date1);
+    var d2 = new Date(date2);
+    var diff = d2.getTime() - d1.getTime();
+    return Math.floor(diff / (1000*60*60*24));
+  }catch(e){
+    return 9999;
+  }
+}
+
+async function loadPersonalityProfile(email){
+  currentPersonalityType = null;
+  currentPersonalityUpdated = null;
+  computedPersonalityType = null;
+
+  var info = document.getElementById("personalityInfo");
+  var resDiv = document.getElementById("personalityResult");
+  var saveBtn = document.getElementById("savePersonalityBtn");
+  saveBtn.disabled = true;
+  resDiv.textContent = "";
+
+  var res = await supabase
+    .from("student_profile")
+    .select("personality_type, personality_updated")
+    .eq("email", email)
+    .limit(1)
+    .single()
+    .catch(()=>({error:null,data:null}));
+
+  if(res && !res.error && res.data){
+    currentPersonalityType = res.data.personality_type || null;
+    currentPersonalityUpdated = res.data.personality_updated || null;
+  }
+
+  updatePersonalityUI();
+}
+
+function updatePersonalityUI(){
+  var info = document.getElementById("personalityInfo");
+  var saveBtn = document.getElementById("savePersonalityBtn");
+
+  if(!currentPersonalityType){
+    info.innerHTML =
+      "هنوز تیپ شخصیت مطالعه برایت ثبت نشده است. "+
+      "لطفاً آزمون را یک‌بار کامل پاسخ بده و نتیجه را ذخیره کن. "+
+      "<br>بعد از ثبت، اگر در ساخت برنامه «بر اساس تیپ شخصیت» را انتخاب کنی، روی الگوریتم اعمال می‌شود.";
+    saveBtn.disabled = true;
+    return;
+  }
+
+  var label = PERSONALITY_LABELS[currentPersonalityType] || currentPersonalityType;
+  var txt = "تیپ ثبت‌شده‌ی فعلی شما: <b>"+label+"</b>";
+  if(currentPersonalityUpdated){
+    txt += " (تاریخ ثبت: "+currentPersonalityUpdated+")";
+    var today = new Date().toISOString().slice(0,10);
+    var diff = daysBetween(currentPersonalityUpdated, today);
+    if(diff < 60){
+      txt += "<br>امکان ثبت تیپ جدید تا "+(60-diff)+" روز دیگر فعال می‌شود.";
+    }else{
+      txt += "<br>در صورت نیاز می‌توانی دوباره آزمون بدهی و تیپ جدید ثبت کنی.";
+    }
+  }
+  info.innerHTML = txt;
+}
+
+function computePersonality(){
+  var scores = {
+    obsessive:0,
+    runner:0,
+    steady:0,
+    lastminute:0
+  };
+
+  for(var q=1;q<=16;q++){
+    var name = "q"+q;
+    var radios = document.getElementsByName(name);
+    var val = null;
+    for(var i=0;i<radios.length;i++){
+      if(radios[i].checked){ val = parseInt(radios[i].value,10); break; }
+    }
+    if(!val){
+      alert("لطفاً به همه‌ی سؤالات پاسخ بده. سؤال "+q+" خالی است.");
+      return;
+    }
+    var cfg = personalityConfig[name];
+    if(!cfg) continue;
+    var baseScore = val-1; // ۰ تا ۴
+    for(var key in cfg){
+      scores[key] += baseScore * cfg[key];
+    }
+  }
+
+  var bestType = null;
+  var bestScore = -9999;
+  for(var t in scores){
+    if(scores[t] > bestScore){
+      bestScore = scores[t];
+      bestType = t;
+    }
+  }
+  computedPersonalityType = bestType;
+
+  var label = PERSONALITY_LABELS[bestType] || bestType;
+  var desc  = PERSONALITY_DESCRIPTIONS[bestType] || "";
+  var resDiv = document.getElementById("personalityResult");
+  resDiv.innerHTML =
+    "تیپ پیشنهادی شما: <b>"+label+"</b><br>"+desc+
+    "<br><span style='font-size:11px;color:#666'>برای اعمال این تیپ در برنامه‌ریزی (فقط وقتی «برنامه بر اساس تیپ شخصیت» را انتخاب کنی)، روی «ثبت تیپ در حساب من» بزن.</span>";
+
+  document.getElementById("savePersonalityBtn").disabled = false;
+}
+
+async function savePersonality(){
+  if(!computedPersonalityType){
+    alert("اول تیپ خودت را با زدن «محاسبه تیپ» به‌دست بیاور.");
+    return;
+  }
+
+  var userRes = await supabase.auth.getUser();
+  if(userRes.error || !userRes.data.user){
+    alert("ابتدا وارد حساب کاربری شو.");
+    return;
+  }
+  var email = userRes.data.user.email;
+
+  var today = new Date().toISOString().slice(0,10);
+  if(currentPersonalityUpdated){
+    var diff = daysBetween(currentPersonalityUpdated, today);
+    if(diff < 60){
+      alert("فعلاً کمتر از ۶۰ روز از آخرین ثبت تیپ گذشته. بعداً دوباره امتحان کن.");
+      return;
+    }
+  }
+
+  var upRes = await supabase
+    .from("student_profile")
+    .upsert({
+      email: email,
+      personality_type: computedPersonalityType,
+      personality_updated: today
+    });
+
+  if(upRes.error){
+    alert("خطا در ذخیره تیپ: "+upRes.error.message);
+    console.log(upRes.error);
+    return;
+  }
+
+  currentPersonalityType = computedPersonalityType;
+  currentPersonalityUpdated = today;
+  updatePersonalityUI();
+  alert("تیپ شخصیتت ذخیره شد. از این به بعد وقتی «برنامه بر اساس تیپ شخصیت» را انتخاب کنی، این تیپ روی برنامه اعمال می‌شود.");
+}
+
+// ===== پر کردن عقب‌ماندگی از برنامه‌های قبلی =====
+
+function parseHoursFromText(txt){
+  var m = txt.match(/مدت:\s*([\d\.]+)\s*ساعت/);
+  if(m) return parseFloat(m[1])||1.5;
+  var m2 = txt.match(/(\d+)\s*دقیقه/);
+  if(m2){
+    var min = parseInt(m2[1],10)||0;
+    return min/60;
+  }
+  return 1.5;
+}
+
+function appendOfflineBacklogRow(subject, topic, hours){
+  var tbody=document.getElementById("offlineBody");
+  var tr=document.createElement("tr");
+  tr.innerHTML=
+    '<td><select class="off-subject" onchange="updateTopicOptions(this, \'off-topic\')">'+
+      '<option'+(subject==="زیست"?' selected':'')+'>زیست</option>'+
+      '<option'+(subject==="شیمی"?' selected':'')+'>شیمی</option>'+
+      '<option'+(subject==="فیزیک"?' selected':'')+'>فیزیک</option>'+
+      '<option'+(subject==="ریاضی"?' selected':'')+'>ریاضی</option>'+
+      '<option'+(subject==="ادبیات"?' selected':'')+'>ادبیات</option>'+
+      '<option'+(subject==="دینی"?' selected':'')+'>دینی</option>'+
+      '<option'+(subject==="عربی"?' selected':'')+'>عربی</option>'+
+      '<option'+(subject==="زبان"?' selected':'')+'>زبان</option>'+
+    '</select></td>'+
+    '<td><select class="off-topic"></select></td>'+
+    '<td><input type="number" step="0.5" class="off-hours" value="'+(hours||1.5)+'"></td>'+
+    '<td><button type="button" class="small-btn del" onclick="this.closest(\'tr\').remove()">حذف</button></td>';
+  tbody.appendChild(tr);
+  var subjSel=tr.querySelector(".off-subject");
+  updateTopicOptions(subjSel,"off-topic");
+  if(topic){
+    var topicSel=tr.querySelector(".off-topic");
+    var found=false;
+    for(var i=0;i<topicSel.options.length;i++){
+      if(topicSel.options[i].value===topic){found=true;break;}
+    }
+    if(found) topicSel.value=topic;
+  }
+}
+
+function appendLagBacklogRow(subject, topic, resource, count){
+  var tbody=document.getElementById("lagBody");
+  var tr=document.createElement("tr");
+  tr.innerHTML=
+    '<td><select class="lag-subject" onchange="updateTopicOptions(this, \'lag-topic\')">'+
+      '<option'+(subject==="زیست"?' selected':'')+'>زیست</option>'+
+      '<option'+(subject==="شیمی"?' selected':'')+'>شیمی</option>'+
+      '<option'+(subject==="فیزیک"?' selected':'')+'>فیزیک</option>'+
+      '<option'+(subject==="ریاضی"?' selected':'')+'>ریاضی</option>'+
+    '</select></td>'+
+    '<td><select class="lag-topic"></select></td>'+
+    '<td><select class="lag-source">'+
+      ['خیلی سبز','نردبام','مبتکران','نشرالگو','سه سطحی','QB','موج آزمون','فصل آزمون','IQ','میکرو گاج','تیتانیوم']
+        .map(function(src){
+          return '<option'+(src===resource?' selected':'')+'>'+src+'</option>';
+        }).join("")+
+    '</select></td>'+
+    '<td><input type="number" class="lag-count" min="10" step="10" value="'+(count||80)+'"></td>'+
+    '<td><button type="button" class="small-btn del" onclick="this.closest(\'tr\').remove()">حذف</button></td>';
+  tbody.appendChild(tr);
+  var subjSel=tr.querySelector(".lag-subject");
+  updateTopicOptions(subjSel,"lag-topic");
+  if(topic){
+    var topicSel=tr.querySelector(".lag-topic");
+    var found=false;
+    for(var i=0;i<topicSel.options.length;i++){
+      if(topicSel.options[i].value===topic){found=true;break;}
+    }
+    if(found) topicSel.value=topic;
+  }
+}
+
+async function prefillBacklogFromAllPlans(){
+  if(backlogPrefilled) return;
+  backlogPrefilled = true;
+
+  var userRes = await supabase.auth.getUser();
+  if(userRes.error || !userRes.data.user) return;
+  var user = userRes.data.user;
+
+  var pRes = await supabase
+    .from("plans")
+    .select("id,program_date")
+    .eq("email", user.email)
+    .order("program_date", { ascending:true });
+
+  if(pRes.error || !pRes.data) return;
+  var plans=pRes.data;
+  if(!plans.length) return;
+
+  var today = new Date();
+  today.setHours(0,0,0,0);
+
+  for(var pi=0;pi<plans.length;pi++){
+    var p=plans[pi];
+    var labels=getDateLabelsFromProgramDate(p.program_date);
+
+    var tRes=await supabase
+      .from("task_status")
+      .select("id,day,task_text,status,leftover,done")
+      .eq("plan_id", p.id);
+
+    if(tRes.error || !tRes.data) continue;
+    var tasks=tRes.data;
+
+    for(var ti=0;ti<tasks.length;ti++){
+      var t=tasks[ti];
+      var dayIndex=t.day-1;
+      if(dayIndex<0 || dayIndex>=14) continue;
+      var dLabel=labels[dayIndex];
+      if(!dLabel) continue;
+      var datePart=dLabel.split(" ")[1];
+      var parts=datePart.split("/");
+      var yy=parseInt(parts[0],10);
+      var mm=parseInt(parts[1],10)-1;
+      var dd=parseInt(parts[2],10);
+      var dateObj=new Date(yy,mm,dd);
+      dateObj.setHours(0,0,0,0);
+      if(dateObj>=today) continue;
+
+      var st = t.status || (t.done?TASK_STATUS.DONE:TASK_STATUS.TODO);
+      if(st===TASK_STATUS.DONE) continue;
+
+      var leftoverVal = t.leftover || 0;
+      var txt=t.task_text || "";
+
+      if(txt.indexOf("فیلم آفلاین")>-1 || txt.indexOf("کلاس آنلاین")>-1){
+        var subMatch = txt.match(/(فیلم آفلاین|کلاس آنلاین)\s+(\S+)/);
+        var subject = subMatch ? subMatch[2] : "زیست";
+        var topic = "";
+        var dashIndex = txt.indexOf("–");
+        if(dashIndex>-1){
+          var subStr = txt.substring(dashIndex+1);
+          var idxMed = subStr.indexOf("مدت:");
+          if(idxMed>-1) subStr = subStr.substring(0,idxMed);
+          topic = subStr.trim();
+        }
+        var hours;
+        if(st===TASK_STATUS.PARTIAL && leftoverVal>0){
+          hours = leftoverVal;
+        }else{
+          hours = parseHoursFromText(txt);
+        }
+        appendOfflineBacklogRow(subject,topic,hours);
+        continue;
+      }
+
+      if(txt.indexOf("تست")>-1 || txt.indexOf("مطالعه")>-1){
+        var subjMatch = txt.match(/(تست|مطالعه)\s+(\S+)/);
+        var subject2 = subjMatch ? subjMatch[2] : "زیست";
+        var resMatch = txt.match(/منبع:\s*([^\s]+)/);
+        var resource = resMatch ? resMatch[1] : "خیلی سبز";
+
+        var count;
+        if(st===TASK_STATUS.PARTIAL && leftoverVal>0){
+          count = Math.round(leftoverVal);
+        }else{
+          var countMatch = txt.match(/حدود\s+(\d+)\s+تست/);
+          if(countMatch){
+            count = parseInt(countMatch[1],10)||0;
+          }else{
+            var h = parseHoursFromText(txt);
+            var perMin=SOURCE_MIN_PER_QUESTION[resource]||2.0;
+            count = Math.round((h*60)/perMin);
+          }
+        }
+        if(count>0){
+          var topic2="";
+          var dash2 = txt.indexOf("–");
+          if(dash2>-1){
+            var sub2 = txt.substring(dash2+1);
+            var idxRes = sub2.indexOf("منبع:");
+            if(idxRes>-1) sub2=sub2.substring(0,idxRes);
+            var idxHor = sub2.indexOf("حدود");
+            if(idxHor>-1) sub2=sub2.substring(0,idxHor);
+            topic2=sub2.trim();
+          }
+          appendLagBacklogRow(subject2,topic2,resource,count);
+        }
+      }
+    }
+  }
+}
+
+// ===== جمع‌آوری داده از فرم =====
+function collectStudentDataFromForm(){
+  var fname=document.getElementById("fname").value.trim();
+  var lname=document.getElementById("lname").value.trim();
+  var phone=document.getElementById("phone").value.trim();
+  var city=document.getElementById("city").value.trim();
+  var school=document.getElementById("school").value.trim();
+  var grade=document.getElementById("grade").value;
+  var major=document.getElementById("major").value;
+  var whiteDay=parseFloat(document.getElementById("whiteDay").value)||0;
+  var schoolDay=parseFloat(document.getElementById("schoolDay").value)||0;
+
+  var attendance=[];
+  var attSel=document.querySelectorAll(".att-select");
+  for(var i=0;i<attSel.length;i++){
+    var sel=attSel[i];
+    attendance.push({
+      day:parseInt(sel.getAttribute("data-day"),10),
+      goesToSchool:sel.value
+    });
+  }
+
+  var classes=[];
+  var clsRows=document.querySelectorAll("#classesBody tr");
+  for(var c=0;c<clsRows.length;c++){
+    var tr=clsRows[c];
+    var d=parseInt(tr.querySelector(".class-day").value||"0",10);
+    if(!d) continue;
+    classes.push({
+      day:d,
+      subject:tr.querySelector(".class-subject").value,
+      duration:parseFloat(tr.querySelector(".class-duration").value)||0,
+      topic:tr.querySelector(".class-topic").value
+    });
+  }
+
+  var exams=[];
+  var cards=document.querySelectorAll(".exam-card");
+  for(var i2=0;i2<cards.length;i2++){
+    var card=cards[i2];
+    var day=parseInt(card.querySelector(".exam-day").value||"0",10);
+    if(!day) continue;
+    var subject=card.querySelector(".exam-subject").value;
+    var type=card.querySelector(".exam-type").value;
+    var duration=card.querySelector(".exam-duration").value;
+    var needsAnalysis = card.querySelector(".exam-analysis-need").checked;
+    var analysisStartDay = parseInt(card.querySelector(".exam-analysis-start").value||"0",10);
+    var allowExamDayStudy = card.querySelector(".exam-allow-today").checked;
+
+    var topics=[];
+    var tSel=card.querySelectorAll(".exam-chapter");
+    for(var j=0;j<tSel.length;j++){
+      topics.push(tSel[j].value);
+    }
+    if(!topics.length) topics=["فصل نامشخص"];
+
+    var resources=[];
+    var srcSel=card.querySelectorAll(".exam-source");
+    var cntSel=card.querySelectorAll(".exam-count");
+    for(j=0;j<srcSel.length;j++){
+      var cnum=parseInt(cntSel[j].value||"0",10);
+      if(cnum>0){
+        resources.push({name:srcSel[j].value,count:cnum});
+      }
+    }
+    if(!resources.length) continue;
+
+    exams.push({
+      day:day,
+      subject:subject,
+      type:type,
+      duration:duration,
+      topics:topics,
+      resources:resources,
+      needsAnalysis:needsAnalysis,
+      analysisStartDay:analysisStartDay,
+      allowExamDayStudy:allowExamDayStudy
+    });
+  }
+
+  var offlineVideos=[];
+  var offRows=document.querySelectorAll("#offlineBody tr");
+  for(var o=0;o<offRows.length;o++){
+    var tro=offRows[o];
+    var subjectO=tro.querySelector(".off-subject").value;
+    var topicO=tro.querySelector(".off-topic").value;
+    var hours=parseFloat(tro.querySelector(".off-hours").value)||0;
+    if(hours>0) offlineVideos.push({subject:subjectO,topic:topicO,hours:hours});
+  }
+
+  var backlogTests=[];
+  var lagRows=document.querySelectorAll("#lagBody tr");
+  for(var l=0;l<lagRows.length;l++){
+    var trl=lagRows[l];
+    var subjectL=trl.querySelector(".lag-subject").value;
+    var topicL=trl.querySelector(".lag-topic").value;
+    var sourceL=trl.querySelector(".lag-source").value;
+    var countL=parseInt(trl.querySelector(".lag-count").value||"0",10);
+    if(countL>0) backlogTests.push({subject:subjectL,topic:topicL,resource:sourceL,count:countL});
+  }
+
+  var progressTargets=[];
+  var progRows=document.querySelectorAll("#progBody tr");
+  for(var p=0;p<progRows.length;p++){
+    var trp=progRows[p];
+    var subjectP=trp.querySelector(".prog-subject").value;
+    var topicP=trp.querySelector(".prog-topic").value;
+    var sourceP=trp.querySelector(".prog-source").value;
+    var countP=parseInt(trp.querySelector(".prog-count").value||"0",10);
+    if(countP>0) progressTargets.push({subject:subjectP,topic:topicP,resource:sourceP,count:countP});
+  }
+
+  var stats={
+    biology:{avgRank:parseInt(document.getElementById("rankBio").value||"0",10)||0},
+    chemistry:{avgRank:parseInt(document.getElementById("rankChem").value||"0",10)||0},
+    physics:{avgRank:parseInt(document.getElementById("rankPhys").value||"0",10)||0},
+    math:{avgRank:parseInt(document.getElementById("rankMath").value||"0",10)||0}
+  };
+
+  return {
+    fname:fname,lname:lname,phone:phone,city:city,school:school,grade:grade,major:major,
+    whiteDay:whiteDay,schoolDay:schoolDay,
+    attendance:attendance,classes:classes,exams:exams,
+    offlineVideos:offlineVideos,backlogTests:backlogTests,progressTargets:progressTargets,
+    stats:stats
+  };
+}
+
+// ===== الگوریتم ساخت برنامه (دو حالت: normal / personality) =====
+function buildPlan(student, dateLabels, mode){
+  var DAYS=14;
+  var dayFree=new Array(DAYS).fill(0);
+  var dayHasSchool=new Array(DAYS).fill(false);
+  var classHoursPerDay=new Array(DAYS).fill(0);
+  var d,i;
+
+  // تیپ نهایی که روی الگوریتم اثر می‌گذارد:
+  // حالت عادی: همیشه steady
+  // حالت تیپ: اگر تیپ ذخیره شده باشد از همان، وگرنه steady
+  var personality = "steady";
+  if(mode === "personality" && currentPersonalityType){
+    personality = currentPersonalityType;
+  }
+
+  // ۱) محاسبه ساعت خالی هر روز
+  for(d=1;d<=DAYS;d++){
+    var att=null;
+    for(i=0;i<student.attendance.length;i++){
+      if(student.attendance[i].day===d){att=student.attendance[i];break;}
+    }
+    var base=(att && att.goesToSchool==="بله")? student.schoolDay : student.whiteDay;
+    dayFree[d-1]=base||0;
+    dayHasSchool[d-1]=!!(att && att.goesToSchool==="بله");
+  }
+
+  for(i=0;i<student.classes.length;i++){
+    var c=student.classes[i];
+    if(c.day>=1 && c.day<=DAYS){
+      var h=parseFloat(c.duration)||0;
+      classHoursPerDay[c.day-1]+=h;
+      dayFree[c.day-1]-=h;
+    }
+  }
+
+  // کم کردن خود آزمون
+  for(i=0;i<student.exams.length;i++){
+    var ex0=student.exams[i];
+    if(ex0.day>=1 && ex0.day<=DAYS){
+      dayFree[ex0.day-1]-=parseDurationToHours(ex0.duration);
+    }
+  }
+  for(i=0;i<DAYS;i++){ if(dayFree[i]<0) dayFree[i]=0; }
+
+  // ۲) شخصیتی: فقط اگر mode = personality
+  if(mode==="personality" && personality==="lastminute"){
+    var oriWeek1=0, adjWeek1=0;
+    for(i=0;i<7;i++){
+      var ori = dayFree[i];
+      var adj = ori*0.8; // هفته اول سبک‌تر
+      oriWeek1 += ori;
+      adjWeek1 += adj;
+      dayFree[i] = adj;
+    }
+    var lost = oriWeek1 - adjWeek1;
+    if(lost>0){
+      var addPerDay=lost/7;
+      for(i=7;i<14;i++){
+        dayFree[i]+=addPerDay;
+      }
+    }
+  }
+
+  // ۳) جمع کل و هفته‌ای
+  var week1Free=0,week2Free=0;
+  for(i=0;i<7;i++) week1Free+=dayFree[i];
+  for(i=7;i<14;i++) week2Free+=dayFree[i];
+  var totalFree=week1Free+week2Free;
+
+  // عمومی‌ها
+  var publicW1=totalFree*0.15;
+  var publicW2=totalFree*0.05;
+  var publicSubjects=["ادبیات","دینی","عربی","زبان"];
+  var publicWeights={"ادبیات":0.5,"دینی":0.2,"عربی":0.2,"زبان":0.1};
+  var totalPublic=publicW1+publicW2;
+  var subjectRemainingPublic={};
+  publicSubjects.forEach(function(s){
+    subjectRemainingPublic[s]=totalPublic*(publicWeights[s]||0);
+  });
+
+  // عقب‌ماندگی: ضرایب بر اساس تیپ فقط اگر mode = personality
+  var lagFactor1=0.30;
+  var lagFactor2=0.15;
+  if(mode==="personality" && personality==="obsessive"){
+    lagFactor1=0.35;
+    lagFactor2=0.20;
+  }
+  var lagW1=week1Free*lagFactor1;
+  var lagW2=week2Free*lagFactor2;
+
+  // آزمون‌ها
+  var examQueue=[];
+  var examTotalNeededTests=0;
+  var examTotalHoursBefore=0;
+  for(i=0;i<student.exams.length;i++){
+    var ex=student.exams[i];
+    var topics=(ex.topics && ex.topics.length)? ex.topics:[""];
+    for(var r=0;r<ex.resources.length;r++){
+      var res=ex.resources[r];
+      var perMin=SOURCE_MIN_PER_QUESTION[res.name]||2.0;
+      var testH=(res.count*perMin)/60;
+      var studyH=testH*studyRatio(ex.subject);
+      examQueue.push({
+        day:ex.day,
+        subject:ex.subject,
+        topics:topics,
+        resource:res.name,
+        totalTests:res.count,
+        testHours:testH,
+        studyHours:studyH,
+        allowExamDayStudy: !!ex.allowExamDayStudy
+      });
+      examTotalNeededTests+=res.count;
+      examTotalHoursBefore+=(testH+studyH);
+    }
+  }
+
+  // تحلیل آزمون
+  var analysisQueue=[];
+  var analysisTotalHours=0;
+  for(i=0;i<student.exams.length;i++){
+    var exA=student.exams[i];
+    if(!exA.needsAnalysis) continue;
+    if(!(exA.type==="آزمون آزمایشی" || exA.type==="امتحان کلاس بیرون")) continue;
+    var durH=parseDurationToHours(exA.duration);
+    var aH=durH*0.5;
+    var startDay=exA.analysisStartDay || (exA.day+1);
+    if(startDay<exA.day) startDay=exA.day;
+    analysisQueue.push({
+      subject:exA.subject,
+      topics:(exA.topics && exA.topics.length? exA.topics:["فصل‌های آزمون"]),
+      examDay:exA.day,
+      earliestDay:startDay,
+      hours:aH
+    });
+    analysisTotalHours+=aH;
+  }
+
+  var reservedForPublicLag=publicW1+publicW2;
+
+  // عقب‌ماندگی‌ها (فیلم + تست)
+  var backlogQueue=[];
+  var backlogTotalHours=0;
+  for(i=0;i<student.offlineVideos.length;i++){
+    var v=student.offlineVideos[i];
+    backlogQueue.push({type:"offline",subject:v.subject,topic:v.topic,hours:v.hours||0});
+    backlogTotalHours+=(v.hours||0);
+  }
+  for(i=0;i<student.backlogTests.length;i++){
+    var l=student.backlogTests[i];
+    var perMin2=SOURCE_MIN_PER_QUESTION[l.resource]||2.0;
+    var h2=(l.count*perMin2)/60;
+    backlogQueue.push({
+      type:"lagtest",subject:l.subject,topic:l.topic,
+      resource:l.resource,count:l.count,hours:h2
+    });
+    backlogTotalHours+=h2;
+  }
+
+  // پیشروی
+  var progressQueue=[];
+  var progressTotalHours=0;
+  for(i=0;i<student.progressTargets.length;i++){
+    var p=student.progressTargets[i];
+    var perMin3=SOURCE_MIN_PER_QUESTION[p.resource]||2.0;
+    var testH2=(p.count*perMin3)/60;
+    var studyH2=testH2*studyRatio(p.subject);
+    progressQueue.push({
+      subject:p.subject,topic:p.topic,resource:p.resource,
+      totalTests:p.count,testHours:testH2,studyHours:studyH2
+    });
+    progressTotalHours+=(testH2+studyH2);
+  }
+
+  // تنظیم مقیاس زمانی آزمون‌ها
+  var freeForExamAndMore=totalFree-reservedForPublicLag;
+  var examScale=1;
+  if(freeForExamAndMore>0 && examTotalHoursBefore>freeForExamAndMore){
+    examScale=freeForExamAndMore/examTotalHoursBefore;
+  }
+  for(i=0;i<examQueue.length;i++){
+    examQueue[i].testHours*=examScale;
+    examQueue[i].studyHours*=examScale;
+    examQueue[i].totalTests=Math.round(examQueue[i].totalTests*examScale);
+  }
+  var examCoveragePercent = (examTotalHoursBefore>0? examScale*100 : 100);
+
+  var sw=detectStrongWeak(student.stats);
+  var strong=sw.strong;
+  var weak=sw.weak;
+
+  function takeFromBacklog(maxStudyHours,maxOfflineVideo){
+    var used=0;
+    var offlineUsed=0;
+    var tasks=[];
+    var i2;
+    for(i2=0;i2<backlogQueue.length && used<maxStudyHours-0.25;i2++){
+      var it=backlogQueue[i2];
+      if(it.type!=="offline") continue;
+      var offlineRemain=maxOfflineVideo-offlineUsed;
+      if(offlineRemain<=0.25) continue;
+      var can=Math.min(it.hours, maxStudyHours-used, offlineRemain, 2);
+      if(can<0.5) continue;
+      used+=can;
+      offlineUsed+=can;
+      it.hours-=can;
+      tasks.push(
+        '🎬 فیلم آفلاین '+it.subject+' – '+(it.topic||"فصل نامشخص")+
+        '<br>مدت: '+formatHoursWithMinutes(can)
+      );
+      if(it.hours<=0.25){backlogQueue.splice(i2,1);i2--;}
+    }
+    for(i2=0;i2<backlogQueue.length && used<maxStudyHours-0.25;i2++){
+      var it2=backlogQueue[i2];
+      if(it2.type!=="lagtest") continue;
+      var perMin=SOURCE_MIN_PER_QUESTION[it2.resource]||2.0;
+      var can2=Math.min(it2.hours, maxStudyHours-used, 2);
+      if(can2<0.5) continue;
+      var q=Math.round((can2*60)/perMin);
+      if(q<=0) continue;
+      used+=can2;
+      it2.hours-=can2;
+      it2.count-=q;
+      var weakTag=(it2.subject===weak? " ⭐ تمرکز روی نقطه‌ضعف" : "");
+      tasks.push(
+        '🧪 تست عقب‌مانده '+it2.subject+' از '+it2.resource+' – '+(it2.topic||"فصل نامشخص")+'<br>'+
+        'حدود '+q+' تست در '+formatHoursWithMinutes(can2)+weakTag
+      );
+      if(it2.count<=0 || it2.hours<=0.25){backlogQueue.splice(i2,1);i2--;}
+    }
+
+    return {used:used,tasks:tasks,offlineUsed:offlineUsed};
+  }
+
+  function takeFromExams(dayIdx,maxH){
+    var used=0;
+    var tasks=[];
+    var testTime=0;
+    examQueue.sort(function(a,b){return a.day-b.day;});
+
+    for(var i3=0;i3<examQueue.length && used<maxH-0.25;i3++){
+      var ex2=examQueue[i3];
+      if(ex2.day<dayIdx+1) continue;
+      if(ex2.day===dayIdx+1 && !ex2.allowExamDayStudy) continue;
+
+      var total=ex2.testHours+ex2.studyHours;
+      var block=Math.min(total,maxH-used,4);
+      if(block<0.5) continue;
+      var ratio=(total>0? block/total : 0);
+      var testPart=ex2.testHours*ratio;
+      var studyPart=ex2.studyHours*ratio;
+      var perMin=SOURCE_MIN_PER_QUESTION[ex2.resource]||2.0;
+      var q2=Math.round((testPart*60)/perMin);
+      if(q2<=0 && studyPart>0){
+        testPart=0;
+      }
+      used+=block;
+      ex2.testHours-=testPart;
+      ex2.studyHours-=studyPart;
+      testTime+=testPart;
+
+      var chapters=(ex2.topics && ex2.topics.length? ex2.topics.join("، "):"فصل نامشخص");
+      var typeTag='آزمون/امتحان روز '+ex2.day;
+      var weakTag2=(ex2.subject===weak? " ⭐ تمرکز روی نقطه‌ضعف" : "");
+      if(testPart>0.25){
+        tasks.push(
+          '🟡 تست '+ex2.subject+' برای '+typeTag+'<br>'+
+          'منبع: '+ex2.resource+' | فصل: '+chapters+'<br>'+
+          'حدود '+q2+' تست در '+formatHoursWithMinutes(testPart)+weakTag2
+        );
+      }
+      if(studyPart>0.25){
+        tasks.push(
+          '📖 مطالعه '+ex2.subject+' برای '+typeTag+'<br>'+
+          'منبع: '+ex2.resource+' | فصل: '+chapters+'<br>'+
+          'مدت مطالعه: '+formatHoursWithMinutes(studyPart)
+        );
+      }
+      if(ex2.testHours+ex2.studyHours<=0.25 || ex2.totalTests<=q2){
+        examQueue.splice(i3,1);i3--;
+      }else{
+        ex2.totalTests=Math.max(0,ex2.totalTests-q2);
+      }
+    }
+    return {used:used,tasks:tasks,testTime:testTime};
+  }
+
+  function takeFromAnalysis(dayIdx,maxH){
+    var used=0;
+    var tasks=[];
+    for(var i5=0;i5<analysisQueue.length && used<maxH-0.25;i5++){
+      var item=analysisQueue[i5];
+      if(item.earliestDay>dayIdx+1) continue;
+      if(item.hours<=0){
+        analysisQueue.splice(i5,1);i5--;continue;
+      }
+      var can=Math.min(item.hours, maxH-used, 2);
+      if(can<0.5) continue;
+      used+=can;
+      item.hours-=can;
+      var ch=(item.topics && item.topics.length? item.topics.join("، "):"فصل‌های آزمون");
+      tasks.push(
+        '🧠 تحلیل آزمون '+item.subject+' (روز '+item.examDay+') – '+ch+'<br>'+
+        'مدت: '+formatHoursWithMinutes(can)
+      );
+      if(item.hours<=0.25){
+        analysisQueue.splice(i5,1);i5--;
+      }
+    }
+    return {used:used,tasks:tasks};
+  }
+
+  function takeFromProgress(maxH,strongSub){
+    var used=0;
+    var tasks=[];
+    progressQueue.sort(function(a,b){
+      if(a.subject===strongSub && b.subject!==strongSub) return -1;
+      if(b.subject===strongSub && a.subject!==strongSub) return 1;
+      return 0;
+    });
+    for(var i4=0;i4<progressQueue.length && used<maxH-0.25;i4++){
+      var p2=progressQueue[i4];
+      var total2=p2.testHours+p2.studyHours;
+      var block2=Math.min(total2,maxH-used,2);
+      if(block2<0.5) continue;
+      var ratio2=(total2>0? block2/total2 : 0);
+      var testPart2=p2.testHours*ratio2;
+      var studyPart2=p2.studyHours*ratio2;
+      var perMin2=SOURCE_MIN_PER_QUESTION[p2.resource]||2.0;
+      var q3=Math.round((testPart2*60)/perMin2);
+      used+=block2;
+      p2.testHours-=testPart2;
+      p2.studyHours-=studyPart2;
+      var strongTag=(p2.subject===strongSub? " ⭐ استفاده از نقطه قوت" : "");
+      var ch=(p2.topic||"مباحث بعدی");
+      tasks.push(
+        '🟣 پیشروی '+p2.subject+' – '+ch+'<br>'+
+        'منبع: '+p2.resource+' | حدود '+q3+' تست + مطالعه در '+formatHoursWithMinutes(block2)+strongTag
+      );
+      if(p2.testHours+p2.studyHours<=0.25 || p2.totalTests<=q3){
+        progressQueue.splice(i4,1);i4--;
+      }else{
+        p2.totalTests=Math.max(0,p2.totalTests-q3);
+      }
+    }
+    return {used:used,tasks:tasks};
+  }
+
+  var backlogHoursUsed=0;
+  var progressHoursUsed=0;
+  var analysisHoursUsed=0;
+
+  var plan=[];
+  for(d=1;d<=DAYS;d++){
+    var baseFree=dayFree[d-1];
+    var free = baseFree;
+    if(examCoveragePercent<70){
+      free += 0.5;
+    }
+    var dayTasks=[];
+    var testHoursToday=0;
+
+    var hasClassToday=(classHoursPerDay[d-1]>0);
+    var videoCapDay = dayHasSchool[d-1] ? 3 : 4;
+    var videoUsedToday = classHoursPerDay[d-1];
+
+    // کلاس‌های آنلاین همان روز
+    for(i=0;i<student.classes.length;i++){
+      var cl=student.classes[i];
+      if(cl.day===d){
+        dayTasks.push(
+          '🎧 شرکت در کلاس آنلاین '+cl.subject+' – '+(cl.topic||"فصل نامشخص")+
+          '<br>مدت: '+formatHoursWithMinutes(cl.duration||0)
+        );
+      }
+    }
+
+    // تیپ «پرتلاش اما فرار» فقط در حالت personality
+    if(mode==="personality" && personality==="runner" && d>=4 && free>0.5){
+      var reviewSub = (weak==="زیست" || weak==="شیمی") ? weak : "زیست";
+      var reviewH = Math.min(0.5, free);
+      dayTasks.push(
+        '🔍 مرور مفهومی '+reviewSub+' (بر اساس مباحث سخت یا آزمون‌های اخیر)<br>'+
+        'مدت: '+formatHoursWithMinutes(reviewH)
+      );
+      free -= reviewH;
+    }
+
+    // عمومی‌ها
+    if(free>0 && (!hasClassToday)){
+      var capPubDay=(d<=7? publicW1:publicW2);
+      if(capPubDay>0){
+        var dayMaxPub=Math.min(2,free,capPubDay);
+        var remainToday=dayMaxPub;
+        var startIdx=(d-1)%publicSubjects.length;
+        for(var k=0;k<publicSubjects.length && remainToday>0.25;k++){
+          var subj=publicSubjects[(startIdx+k)%publicSubjects.length];
+          var subjRemain=subjectRemainingPublic[subj]||0;
+          if(subjRemain<=0.25) continue;
+          var slot=Math.min(subjRemain, remainToday, 1.5);
+          if(slot<0.5) continue;
+          dayTasks.push('📘 '+subj+' – مطالعه و حل تمرین<br>مدت: '+formatHoursWithMinutes(slot));
+          subjectRemainingPublic[subj]-=slot;
+          remainToday-=slot;
+        }
+        var usedPub=dayMaxPub-remainToday;
+        free-=usedPub;
+        if(d<=7) publicW1-=usedPub; else publicW2-=usedPub;
+      }
+    }
+
+    // تحلیل آزمون
+    if(free>0 && analysisQueue.length){
+      var anaRes=takeFromAnalysis(d-1,Math.min(3,free));
+      if(anaRes.used>0){
+        for(i=0;i<anaRes.tasks.length;i++) dayTasks.push(anaRes.tasks[i]);
+        free-=anaRes.used;
+        analysisHoursUsed+=anaRes.used;
+      }
+    }
+
+    // عقب‌ماندگی
+    var capLag=(d<=7? lagW1:lagW2);
+    if(free>0 && capLag>0 && backlogQueue.length){
+      var maxLagToday=Math.min(4,free,capLag);
+      var lagResult=takeFromBacklog(maxLagToday, Math.max(0,videoCapDay-videoUsedToday));
+      if(lagResult.used>0){
+        backlogHoursUsed+=lagResult.used;
+        videoUsedToday+=lagResult.offlineUsed;
+        for(i=0;i<lagResult.tasks.length;i++) dayTasks.push(lagResult.tasks[i]);
+        free-=lagResult.used;
+        if(d<=7) lagW1-=lagResult.used; else lagW2-=lagResult.used;
+      }
+    }
+
+    // آزمون
+    if(free>0 && examQueue.length){
+      var exResult=takeFromExams(d-1,free);
+      if(exResult.used>0){
+        for(i=0;i<exResult.tasks.length;i++) dayTasks.push(exResult.tasks[i]);
+        free-=exResult.used;
+        testHoursToday+=exResult.testTime;
+      }
+    }
+
+    // دوباره عقب‌ماندگی
+    if(free>0 && backlogQueue.length){
+      var lag2=takeFromBacklog(Math.min(3,free), Math.max(0,videoCapDay-videoUsedToday));
+      if(lag2.used>0){
+        backlogHoursUsed+=lag2.used;
+        videoUsedToday+=lag2.offlineUsed;
+        for(i=0;i<lag2.tasks.length;i++) dayTasks.push(lag2.tasks[i]);
+        free-=lag2.used;
+      }
+    }
+
+    // مرور تست‌های مارکدار
+    if(free>0 && testHoursToday>0){
+      var reviewNeed=testHoursToday/6;
+      var hRev=Math.min(free,reviewNeed);
+      if(hRev>=0.25){
+        dayTasks.push('🔁 مرور تست‌های مارک‌دار امروز<br>مدت: '+formatHoursWithMinutes(hRev));
+        free-=hRev;
+      }
+    }
+
+    // پیشروی
+    if(free>0 && progressQueue.length){
+      var progRes=takeFromProgress(free,strong);
+      if(progRes.used>0){
+        progressHoursUsed+=progRes.used;
+        for(i=0;i<progRes.tasks.length;i++) dayTasks.push(progRes.tasks[i]);
+        free-=progRes.used;
+      }
+    }
+
+    // پاس دوم
+    if(free>0.5){
+      if(examQueue.length){
+        var exRes2=takeFromExams(d-1,free);
+        if(exRes2.used>0){
+          for(i=0;i<exRes2.tasks.length;i++) dayTasks.push(exRes2.tasks[i]);
+          free-=exRes2.used;
+        }
+      }
+      if(free>0.5 && progressQueue.length){
+        var progRes2=takeFromProgress(free,strong);
+        if(progRes2.used>0){
+          progressHoursUsed+=progRes2.used;
+          for(i=0;i<progRes2.tasks.length;i++) dayTasks.push(progRes2.tasks[i]);
+          free-=progRes2.used;
+        }
+      }
+    }
+
+    if(dayTasks.length===0){
+      dayTasks.push("⚪ استراحت / مرور سبک");
+    }
+    plan.push(dayTasks);
+  }
+
+  var backlogCoverage = (backlogTotalHours>0) ? Math.round((backlogHoursUsed*100)/backlogTotalHours) : null;
+  var progressCoverage = (progressTotalHours>0) ? Math.round((progressHoursUsed*100)/progressTotalHours) : null;
+  var examCoverage = (examTotalHoursBefore>0) ? Math.round((examScale*100)) : null;
+  var analysisCoverage = (analysisTotalHours>0) ? Math.round((analysisHoursUsed*100)/analysisTotalHours) : null;
+
+  var html='<tr><th>روز</th><th>برنامه</th></tr>';
+  for(d=1;d<=DAYS;d++){
+    var tasksHTML="";
+    for(i=0;i<plan[d-1].length;i++){
+      tasksHTML+='<div class="task-block">'+plan[d-1][i]+'</div>';
+    }
+    var label = (dateLabels && dateLabels[d-1]) ? dateLabels[d-1] : ('روز '+d);
+    html+='<tr><td style="text-align:center">'+label+'</td><td>'+tasksHTML+'</td></tr>';
+  }
+  return {
+    plan:plan,
+    html:html,
+    coverage:{
+      exam:examCoverage,
+      backlog:backlogCoverage,
+      progress:progressCoverage,
+      analysis:analysisCoverage
+    }
+  };
+}
+
+// ===== ساخت برنامه و ذخیره =====
+async function onMakePlanClicked(){
+  var status=document.getElementById("statusMsg");
+  var coverageDiv=document.getElementById("coverageSummary");
+  status.textContent="";
+  coverageDiv.textContent="";
+
+  var userRes = await supabase.auth.getUser();
+  if(userRes.error || !userRes.data.user){
+    alert("اول باید لاگین کنی.");
+    return;
+  }
+  var user=userRes.data.user;
+
+  var planMode = document.getElementById("planMode").value; // normal | personality | ai
+
+  if(planMode === "personality" && !currentPersonalityType){
+    if(!confirm("تیپ شخصیت ثبت‌شده‌ای برای این حساب وجود ندارد.\nاگر می‌خواهی تیپ روی برنامه اثر بگذارد، اول از تب «آزمون شخصیت» تیپ را ثبت کن.\nالان اگر ادامه دهی، مثل حالت عادی (steady) برنامه می‌چینم. ادامه بدهم؟")){
+      showTab("personalityTab");
+      return;
+    }
+  }
+
+  var s=collectStudentDataFromForm();
+
+  if(!s.fname || !s.lname || !s.phone || !s.city || !s.school || !s.grade || !s.major){
+    alert("نام، نام خانوادگی، شماره موبایل، شهر، مدرسه، پایه و رشته حتماً باید پر شوند.");
+    return;
+  }
+  var reg=/^09\d{9}$/;
+  if(!reg.test(s.phone)){
+    alert("شماره موبایل باید با 09 شروع شود و دقیقاً 11 رقم باشد.");
+    return;
+  }
+
+  var programDate=new Date().toISOString().slice(0,10);
+  var dateLabels = getDateLabelsFromProgramDate(programDate);
+  var result=buildPlan(s,dateLabels,planMode);
+
+  document.getElementById("scheduleTable").innerHTML=result.html;
+
+  var examCov = (result.coverage.exam!=null? result.coverage.exam+"٪":"—");
+  var backCov = (result.coverage.backlog!=null? result.coverage.backlog+"٪":"—");
+  var progCov = (result.coverage.progress!=null? result.coverage.progress+"٪":"—");
+  var anaCov  = (result.coverage.analysis!=null? result.coverage.analysis+"٪":"—");
+  coverageDiv.textContent =
+    "پوشش آزمون‌ها: "+examCov+
+    " | پوشش عقب‌ماندگی (فیلم + تست): "+backCov+
+    " | استفاده از اهداف پیشروی: "+progCov+
+    " | پوشش تحلیل آزمون‌ها: "+anaCov;
+
+  status.style.color="#b30000";
+  status.textContent="در حال ذخیره برنامه در Supabase...";
+
+  var insertRes=await supabase
+    .from("plans")
+    .insert({
+      email:user.email,
+      fname:s.fname,
+      lname:s.lname,
+      phone:s.phone,
+      city:s.city,
+      school:s.school,
+      grade:s.grade,
+      major:s.major,
+      program_date:programDate,
+      plan_type: planMode
+    })
+    .select()
+    .single();
+
+  if(insertRes.error){
+    console.log(insertRes.error);
+    status.textContent="❌ خطا در ذخیره برنامه: "+insertRes.error.message;
+    return;
+  }
+
+  var planId=insertRes.data.id;
+  var rows=[];
+  for(var d=0;d<result.plan.length;d++){
+    var dayTasks=result.plan[d];
+    for(var i=0;i<dayTasks.length;i++){
+      var txt=dayTasks[i].replace(/<br>/g," ").replace(/<\/?[^>]+(>|$)/g,"").trim();
+      rows.push({
+        plan_id:planId,
+        day:d+1,
+        task_text:txt,
+        status:TASK_STATUS.TODO,
+        leftover:0,
+        done:false
+      });
+    }
+  }
+
+  if(rows.length){
+    var tRes=await supabase.from("task_status").insert(rows);
+    if(tRes.error){
+      console.log(tRes.error);
+      status.textContent="⚠️ برنامه ذخیره شد اما تسک‌ها ذخیره نشدند: "+tRes.error.message;
+    }else{
+      status.style.color="green";
+      status.textContent="✅ برنامه و تسک‌ها ذخیره شدند.";
+    }
+  }else{
+    status.style.color="green";
+    status.textContent="✅ برنامه ذخیره شد (تسکی ثبت نشد).";
+  }
+
+  loadStudentPlans();
+  loadBacklogView();
+  var u = user.email;
+  if(ADMIN_EMAILS.indexOf(u)>=0){
+    loadAdminPlans();
+  }
+}
+
+// ===== برنامه‌های دانش‌آموز =====
+function planTypeLabel(t){
+  if(t==="personality") return "تیپ شخصیتی";
+  if(t==="ai") return "هوش مصنوعی";
+  return "عادی";
+}
+
+async function loadStudentPlans(){
+  var info = document.getElementById("studentTasksInfo");
+  var plansTable = document.getElementById("studentPlansTable");
+  var tasksTable = document.getElementById("studentTasksTable");
+  var reportBox  = document.getElementById("instantReportBox");
+
+  info.textContent = "";
+  plansTable.innerHTML = "";
+  tasksTable.innerHTML = "";
+  reportBox.textContent = "";
+
+  var userRes = await supabase.auth.getUser();
+  if(userRes.error || !userRes.data.user){
+    info.textContent = "ابتدا لاگین کن.";
+    return;
+  }
+  var user = userRes.data.user;
+
+  var pRes = await supabase
+    .from("plans")
+    .select("id,program_date,plan_type")
+    .eq("email", user.email)
+    .order("program_date", { ascending: false });
+
+  if(pRes.error){
+    plansTable.innerHTML = "<tr><td>خطا در خواندن برنامه‌ها.</td></tr>";
+    console.log(pRes.error);
+    return;
+  }
+
+  var plans = pRes.data || [];
+  if(!plans.length){
+    plansTable.innerHTML = "<tr><td>هنوز هیچ برنامه‌ای ثبت نکرده‌ای.</td></tr>";
+    info.textContent = "";
+    return;
+  }
+
+  var html = "<tr><th>ID</th><th>تاریخ برنامه</th><th>نوع برنامه</th><th>تسک‌ها</th></tr>";
+  for(var i=0;i<plans.length;i++){
+    var p = plans[i];
+    html += '<tr>'+
+      '<td>'+p.id+'</td>'+
+      '<td>'+p.program_date+'</td>'+
+      '<td>'+planTypeLabel(p.plan_type)+'</td>'+
+      '<td><button class="small-btn" onclick="loadStudentTasksForPlan('+p.id+', \''+p.program_date+'\')">نمایش تسک‌ها</button></td>'+
+    '</tr>';
+  }
+  plansTable.innerHTML = html;
+
+  currentStudentPlanId = plans[0].id;
+  currentStudentPlanDate = plans[0].program_date;
+  loadStudentTasksForPlan(currentStudentPlanId, currentStudentPlanDate);
+}
+
+async function loadStudentTasksForPlan(planId, programDate){
+  currentStudentPlanId = planId;
+  currentStudentPlanDate = programDate;
+
+  var info = document.getElementById("studentTasksInfo");
+  var reportBox = document.getElementById("instantReportBox");
+  info.textContent = "";
+  reportBox.textContent = "";
+
+  var tRes = await supabase
+    .from("task_status")
+    .select("id,day,task_text,done,status,leftover")
+    .eq("plan_id", planId)
+    .order("day", { ascending: true })
+    .order("id", { ascending: true });
+
+  if(tRes.error){
+    info.textContent = "خطا در خواندن تسک‌ها.";
+    console.log(tRes.error);
+    return;
+  }
+
+  currentStudentTasks = tRes.data || [];
+  if(!currentStudentTasks.length){
+    info.textContent = "برای این برنامه تسکی ثبت نشده.";
+    document.getElementById("studentTasksTable").innerHTML = "";
+    return;
+  }
+
+  var doneCount=0, partialCount=0, todoCount=0;
+  for(var i=0;i<currentStudentTasks.length;i++){
+    var st=currentStudentTasks[i].status || (currentStudentTasks[i].done?TASK_STATUS.DONE:TASK_STATUS.TODO);
+    if(st===TASK_STATUS.DONE) doneCount++;
+    else if(st===TASK_STATUS.PARTIAL) partialCount++;
+    else todoCount++;
+  }
+  var total=currentStudentTasks.length;
+  var percent = Math.round((doneCount * 100) / total);
+
+  info.textContent =
+    "برنامه تاریخ " + programDate +
+    " | تعداد تسک: " + total +
+    " | انجام شده: " + doneCount +
+    " | ناقص: " + partialCount +
+    " | انجام‌نشده: " + todoCount +
+    " | درصد انجام کامل: " + percent + "٪";
+
+  renderStudentTasksFiltered();
+}
+
+// رندر با فیلتر روز
+function renderStudentTasksFiltered(){
+  var table = document.getElementById("studentTasksTable");
+  var filter = document.getElementById("studentDayFilter").value;
+  table.innerHTML = "";
+
+  if(!currentStudentTasks || !currentStudentTasks.length){
+    table.innerHTML = "<tr><td>تسکی برای نمایش وجود ندارد.</td></tr>";
+    return;
+  }
+
+  var labels = getDateLabelsFromProgramDate(currentStudentPlanDate);
+  var html = "<tr><th>روز</th><th>تسک</th><th>وضعیت</th><th>باقی‌مانده</th></tr>";
+
+  for(var i=0;i<currentStudentTasks.length;i++){
+    var t=currentStudentTasks[i];
+    if(filter!=="all" && String(t.day)!==filter) continue;
+
+    var st=t.status || (t.done?TASK_STATUS.DONE:TASK_STATUS.TODO);
+    var label=labels[t.day-1] || ("روز "+t.day);
+    var badgeHtml="";
+    if(st===TASK_STATUS.DONE) badgeHtml='<span class="badge done">انجام شده</span>';
+    else if(st===TASK_STATUS.PARTIAL) badgeHtml='<span class="badge partial">ناقص</span>';
+    else badgeHtml='<span class="badge todo">انجام‌نشده</span>';
+
+    html+='<tr>'+
+      '<td style="text-align:center">'+label+'</td>'+
+      '<td>'+t.task_text+'</td>'+
+      '<td style="font-size:11px;">'+
+        '<label><input type="radio" name="st_'+t.id+'" value="done" '+(st===TASK_STATUS.DONE?'checked':'')+' onchange="onTaskStatusChange('+t.id+',\'done\')"> انجام شد</label><br>'+
+        '<label><input type="radio" name="st_'+t.id+'" value="todo" '+(st===TASK_STATUS.TODO?'checked':'')+' onchange="onTaskStatusChange('+t.id+',\'todo\')"> انجام نشد</label><br>'+
+        '<label><input type="radio" name="st_'+t.id+'" value="partial" '+(st===TASK_STATUS.PARTIAL?'checked':'')+' onchange="onTaskStatusChange('+t.id+',\'partial\')"> ناقص</label><br>'+
+        badgeHtml+
+      '</td>'+
+      '<td style="text-align:center;">'+
+        '<input type="number" step="0.5" min="0" style="width:70px;" '+
+        'id="left_'+t.id+'" value="'+(t.leftover||0)+'" '+
+        (st===TASK_STATUS.PARTIAL?'':'disabled')+
+        ' onchange="onLeftoverChange('+t.id+')">'+
+        '<div style="font-size:9px;color:#555;">برای تست: تعداد تست | فیلم: ساعت</div>'+
+      '</td>'+
+    '</tr>';
+  }
+  table.innerHTML = html;
+}
+
+// تغییر وضعیت تسک
+async function onTaskStatusChange(taskId,newStatus){
+  var leftoverInput=document.getElementById("left_"+taskId);
+  if(newStatus===TASK_STATUS.PARTIAL){
+    leftoverInput.disabled=false;
+  }else{
+    leftoverInput.disabled=true;
+  }
+
+  var leftoverVal=parseFloat(leftoverInput.value)||0;
+  var doneFlag=(newStatus===TASK_STATUS.DONE);
+
+  var res=await supabase
+    .from("task_status")
+    .update({status:newStatus, leftover:leftoverVal, done:doneFlag})
+    .eq("id",taskId);
+
+  if(res.error){
+    alert("خطا در به‌روزرسانی وضعیت تسک.");
+    console.log(res.error);
+  }else{
+    for(var i=0;i<currentStudentTasks.length;i++){
+      if(currentStudentTasks[i].id===taskId){
+        currentStudentTasks[i].status=newStatus;
+        currentStudentTasks[i].leftover=leftoverVal;
+        currentStudentTasks[i].done=doneFlag;
+        break;
+      }
+    }
+    loadBacklogView();
+    loadStudentPlans();
+  }
+}
+
+// تغییر leftover
+async function onLeftoverChange(taskId){
+  var leftoverInput=document.getElementById("left_"+taskId);
+  var leftoverVal=parseFloat(leftoverInput.value)||0;
+  var res=await supabase
+    .from("task_status")
+    .update({leftover:leftoverVal})
+    .eq("id",taskId);
+  if(res.error){
+    alert("خطا در ذخیره مقدار باقی‌مانده.");
+    console.log(res.error);
+  }else{
+    for(var i=0;i<currentStudentTasks.length;i++){
+      if(currentStudentTasks[i].id===taskId){
+        currentStudentTasks[i].leftover=leftoverVal;
+        break;
+      }
+    }
+  }
+}
+
+// گزارش لحظه‌ای
+function showInstantReport(){
+  var box=document.getElementById("instantReportBox");
+  if(!currentStudentTasks || !currentStudentTasks.length){
+    box.textContent="برنامه‌ای انتخاب نشده.";
+    return;
+  }
+  var doneCount=0, partialCount=0, todoCount=0;
+  var todayIdx=null;
+  var labels=getDateLabelsFromProgramDate(currentStudentPlanDate);
+  var todayStr=(new Date()).toISOString().slice(0,10);
+
+  for(var d=0;d<labels.length;d++){
+    var parts=labels[d].split(" ");
+    var datePart=parts[1];
+    var dparts=datePart.split("/");
+    var y=parseInt(dparts[0],10);
+    var m=parseInt(dparts[1],10)-1;
+    var dd=parseInt(dparts[2],10);
+    var dt=new Date(y,m,dd);
+    var iso=dt.toISOString().slice(0,10);
+    if(iso===todayStr){
+      todayIdx=d+1;
+      break;
+    }
+  }
+
+  var todayDone=[],todayTodo=[],todayPartial=[];
+  for(var i=0;i<currentStudentTasks.length;i++){
+    var t=currentStudentTasks[i];
+    var st=t.status || (t.done?TASK_STATUS.DONE:TASK_STATUS.TODO);
+    if(st===TASK_STATUS.DONE) doneCount++;
+    else if(st===TASK_STATUS.PARTIAL) partialCount++;
+    else todoCount++;
+
+    if(todayIdx && t.day===todayIdx){
+      if(st===TASK_STATUS.DONE) todayDone.push(t.task_text);
+      else if(st===TASK_STATUS.PARTIAL) todayPartial.push(t.task_text);
+      else todayTodo.push(t.task_text);
+    }
+  }
+  var total=currentStudentTasks.length;
+  var percent = Math.round((doneCount*100)/total);
+
+  var html="🔥 گزارش لحظه‌ای این برنامه:<br>"+
+    "کل تسک‌ها: "+total+
+    " | انجام شده: "+doneCount+
+    " | ناقص: "+partialCount+
+    " | انجام‌نشده: "+todoCount+
+    " | درصد انجام کامل: "+percent+"٪";
+
+  if(todayIdx){
+    html+="<br><br>📅 وضعیت امروز ("+labels[todayIdx-1]+"):";
+    if(todayDone.length){
+      html+="<br>✅ انجام شده:";
+      todayDone.forEach(function(t){html+="<br>- "+t;});
+    }
+    if(todayPartial.length){
+      html+="<br>⏳ ناقص:";
+      todayPartial.forEach(function(t){html+="<br>- "+t;});
+    }
+    if(todayTodo.length){
+      html+="<br>❌ انجام‌نشده:";
+      todayTodo.forEach(function(t){html+="<br>- "+t;});
+    }
+  }else{
+    html+="<br><br>📅 امروز داخل بازه ۱۴ روزه این برنامه نیست.";
+  }
+
+  box.innerHTML=html;
+}
+
+// ===== پنل عقب‌ماندگی =====
+async function loadBacklogView(){
+  var table=document.getElementById("backlogTable");
+  table.innerHTML="در حال خواندن عقب‌ماندگی‌ها...";
+
+  var userRes=await supabase.auth.getUser();
+  if(userRes.error || !userRes.data.user){
+    table.innerHTML="<tr><td>ابتدا لاگین کن.</td></tr>";
+    return;
+  }
+  var user=userRes.data.user;
+
+  var pRes=await supabase
+    .from("plans")
+    .select("id,program_date")
+    .eq("email", user.email)
+    .order("program_date",{ascending:true});
+
+  if(pRes.error){
+    table.innerHTML="<tr><td>خطا در خواندن برنامه‌ها.</td></tr>";
+    console.log(pRes.error);
+    return;
+  }
+  var plans=pRes.data||[];
+  if(!plans.length){
+    table.innerHTML="<tr><td>هیچ برنامه‌ای ثبت نشده.</td></tr>";
+    return;
+  }
+
+  var today=new Date();
+  today.setHours(0,0,0,0);
+
+  var backlogRows=[];
+  for(var pi=0;pi<plans.length;pi++){
+    var p=plans[pi];
+    var labels=getDateLabelsFromProgramDate(p.program_date);
+
+    var tRes=await supabase
+      .from("task_status")
+      .select("id,day,task_text,status,leftover,done")
+      .eq("plan_id",p.id);
+
+    if(tRes.error || !tRes.data) continue;
+    var tasks=tRes.data;
+
+    for(var ti=0;ti<tasks.length;ti++){
+      var t=tasks[ti];
+      var st=t.status || (t.done?TASK_STATUS.DONE:TASK_STATUS.TODO);
+      if(st===TASK_STATUS.DONE) continue;
+
+      var dayIndex=t.day-1;
+      if(dayIndex<0 || dayIndex>=14) continue;
+      var dLabel=labels[dayIndex];
+      if(!dLabel) continue;
+      var datePart=dLabel.split(" ")[1];
+      var parts=datePart.split("/");
+      var yy=parseInt(parts[0],10);
+      var mm=parseInt(parts[1],10)-1;
+      var dd=parseInt(parts[2],10);
+      var dt=new Date(yy,mm,dd);
+      dt.setHours(0,0,0,0);
+      if(dt>=today) continue;
+
+      backlogRows.push({
+        plan_id:p.id,
+        program_date:p.program_date,
+        day:t.day,
+        dateLabel:dLabel,
+        task_text:t.task_text,
+        status:st,
+        leftover:t.leftover||0
+      });
+    }
+  }
+
+  if(!backlogRows.length){
+    table.innerHTML="<tr><td>در حال حاضر عقب‌ماندگی ثبت‌شده‌ای وجود ندارد (یا همه انجام شده‌اند).</td></tr>";
+    return;
+  }
+
+  var html="<tr><th>برنامه</th><th>روز/تاریخ</th><th>تسک</th><th>وضعیت</th><th>مقدار باقی‌مانده</th></tr>";
+  backlogRows.forEach(function(r){
+    var badge="";
+    if(r.status===TASK_STATUS.PARTIAL) badge='<span class="badge partial">ناقص</span>';
+    else badge='<span class="badge todo">انجام‌نشده</span>';
+    html+='<tr>'+
+      '<td>برنامه '+r.plan_id+' ('+r.program_date+')</td>'+
+      '<td>'+r.dateLabel+'</td>'+
+      '<td>'+r.task_text+'</td>'+
+      '<td>'+badge+'</td>'+
+      '<td>'+(r.leftover>0? r.leftover : "—")+'</td>'+
+    '</tr>';
+  });
+  table.innerHTML=html;
+}
+
+// ===== پنل ادمین =====
+async function loadAdminPlans(){
+  var table=document.getElementById("adminPlansTable");
+  table.innerHTML="";
+  var res=await supabase
+    .from("plans")
+    .select("id,email,fname,lname,program_date,plan_type")
+    .order("program_date",{ascending:false})
+    .limit(100);
+
+  if(res.error){
+    table.innerHTML="<tr><td>خطا در خواندن برنامه‌ها</td></tr>";
+    console.log(res.error);
+    return;
+  }
+  var rows=res.data;
+  if(!rows.length){
+    table.innerHTML="<tr><td>برنامه‌ای ثبت نشده.</td></tr>";
+    return;
+  }
+
+  var html="<tr><th>ID</th><th>دانش‌آموز</th><th>ایمیل</th><th>تاریخ برنامه</th><th>نوع</th><th>تسک‌ها</th></tr>";
+  for(var i=0;i<rows.length;i++){
+    var p=rows[i];
+    html+='<tr>'+
+      '<td>'+p.id+'</td>'+
+      '<td>'+ (p.fname||"")+' '+(p.lname||"") +'</td>'+
+      '<td>'+ (p.email||"") +'</td>'+
+      '<td>'+ (p.program_date||"") +'</td>'+
+      '<td>'+ planTypeLabel(p.plan_type) +'</td>'+
+      '<td><button class="small-btn" onclick="loadAdminTasks('+p.id+',\''+(p.fname||"")+' '+(p.lname||"")+'\','+'\''+(p.program_date||"")+'\')">نمایش تسک‌ها</button></td>'+
+    '</tr>';
+  }
+  table.innerHTML=html;
+}
+
+async function loadAdminTasks(planId,studentName,programDate){
+  currentAdminPlanId = planId;
+  currentAdminStudentName = studentName;
+  currentAdminProgramDate = programDate;
+
+  var title=document.getElementById("adminPlanTitle");
+  var table=document.getElementById("adminTasksTable");
+  title.textContent="برنامه "+studentName+" در تاریخ "+programDate;
+  table.innerHTML="";
+
+  var res=await supabase
+    .from("task_status")
+    .select("id,day,task_text,done,status,leftover")
+    .eq("plan_id",planId)
+    .order("day",{ascending:true})
+    .order("id",{ascending:true});
+
+  if(res.error){
+    table.innerHTML="<tr><td>خطا در خواندن تسک‌ها</td></tr>";
+    console.log(res.error);
+    return;
+  }
+  var tasks=res.data;
+  if(!tasks.length){
+    table.innerHTML="<tr><td>تسکی ثبت نشده.</td></tr>";
+    return;
+  }
+
+  var doneCount=0, partialCount=0, todoCount=0;
+  for(var i=0;i<tasks.length;i++){
+    var st=tasks[i].status || (tasks[i].done?TASK_STATUS.DONE:TASK_STATUS.TODO);
+    if(st===TASK_STATUS.DONE) doneCount++;
+    else if(st===TASK_STATUS.PARTIAL) partialCount++;
+    else todoCount++;
+  }
+  var total=tasks.length;
+  var percent=Math.round((doneCount*100)/total);
+  title.textContent+=" | انجام شده: "+doneCount+" | ناقص: "+partialCount+" | انجام‌نشده: "+todoCount+" ("+percent+"٪)";
+
+  var labels = getDateLabelsFromProgramDate(programDate);
+
+  var html="<tr><th>روز</th><th>تسک</th><th>وضعیت</th><th>باقی‌مانده</th><th>حذف</th></tr>";
+  for(i=0;i<tasks.length;i++){
+    var t=tasks[i];
+    var st=t.status || (t.done?TASK_STATUS.DONE:TASK_STATUS.TODO);
+    var badge="";
+    if(st===TASK_STATUS.DONE) badge='<span class="badge done">انجام شده</span>';
+    else if(st===TASK_STATUS.PARTIAL) badge='<span class="badge partial">ناقص</span>';
+    else badge='<span class="badge todo">انجام‌نشده</span>';
+    var label = labels[t.day-1] || ("روز "+t.day);
+    html+='<tr>'+
+      '<td style="text-align:center">'+label+'</td>'+
+      '<td>'+t.task_text+'</td>'+
+      '<td style="text-align:center">'+badge+'</td>'+
+      '<td style="text-align:center">'+(t.leftover>0?t.leftover:"—")+'</td>'+
+      '<td style="text-align:center"><button class="small-btn del" onclick="adminDeleteTask('+t.id+')">حذف</button></td>'+
+    '</tr>';
+  }
+  table.innerHTML=html;
+}
+
+async function adminAddTask(){
+  if(!currentAdminPlanId){
+    alert("اول یک برنامه را در پنل ادمین انتخاب کن.");
+    return;
+  }
+  var day = parseInt(document.getElementById("adminNewTaskDay").value||"0",10);
+  var text = document.getElementById("adminNewTaskText").value.trim();
+  if(day<1 || day>14){
+    alert("روز باید بین ۱ تا ۱۴ باشد.");
+    return;
+  }
+  if(!text){
+    alert("متن تسک را وارد کن.");
+    return;
+  }
+  var res = await supabase
+    .from("task_status")
+    .insert({plan_id: currentAdminPlanId, day: day, task_text: text, done:false, status:TASK_STATUS.TODO, leftover:0});
+  if(res.error){
+    alert("خطا در افزودن تسک جدید.");
+    console.log(res.error);
+    return;
+  }
+  document.getElementById("adminNewTaskText").value="";
+  loadAdminTasks(currentAdminPlanId, currentAdminStudentName, currentAdminProgramDate);
+}
+
+async function adminDeleteTask(taskId){
+  if(!currentAdminPlanId) return;
+  if(!confirm("این تسک حذف شود؟")) return;
+  var res = await supabase
+    .from("task_status")
+    .delete()
+    .eq("id", taskId);
+  if(res.error){
+    alert("خطا در حذف تسک.");
+    console.log(res.error);
+    return;
+  }
+  loadAdminTasks(currentAdminPlanId, currentAdminStudentName, currentAdminProgramDate);
+}
+</script>
+</body>
+</html>
