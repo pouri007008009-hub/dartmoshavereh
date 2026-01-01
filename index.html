@@ -1187,6 +1187,94 @@ function getDateLabelsFromProgramDate(programDateStr){
   return labels;
 }
 
+// === تبدیل تاریخ میلادی به شمسی و ساخت لیبل فارسی ===
+
+// تبدیل سال/ماه/روز میلادی به آرایه [سال، ماه، روز] شمسی
+function gregorianToJalali(gy, gm, gd){
+  // gm: 1..12
+  var g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
+  gy = parseInt(gy,10);
+  gm = parseInt(gm,10);
+  gd = parseInt(gd,10);
+
+  var jy;
+  if(gy > 1600){
+    jy = 979;
+    gy -= 1600;
+  }else{
+    jy = 0;
+    gy -= 621;
+  }
+
+  var gy2 = (gm > 2) ? (gy + 1) : gy;
+  var days = (365 * gy) +
+    Math.floor((gy2 + 3) / 4) -
+    Math.floor((gy2 + 99) / 100) +
+    Math.floor((gy2 + 399) / 400) -
+    80 + gd + g_d_m[gm - 1];
+
+  jy += 33 * Math.floor(days / 12053);
+  days %= 12053;
+
+  jy += 4 * Math.floor(days / 1461);
+  days %= 1461;
+
+  if(days > 365){
+    jy += Math.floor((days - 1) / 365);
+    days = (days - 1) % 365;
+  }
+
+  var jm, jd;
+  if(days < 186){
+    jm = 1 + Math.floor(days / 31);
+    jd = 1 + (days % 31);
+  }else{
+    days -= 186;
+    jm = 7 + Math.floor(days / 30);
+    jd = 1 + (days % 30);
+  }
+  return [jy, jm, jd];
+}
+
+// می‌گیرد یک Date میلادی و لیبل "شنبه ۱۴۰۴/۱۰/۱۲" برمی‌گرداند
+function formatJalaliLabelFromGregorianDate(dateObj){
+  var gY = dateObj.getFullYear();
+  var gM = dateObj.getMonth() + 1;
+  var gD = dateObj.getDate();
+  var j = gregorianToJalali(gY, gM, gD);
+  var jY = j[0];
+  var jM = String(j[1]).padStart(2,'0');
+  var jD = String(j[2]).padStart(2,'0');
+
+  var weekdays = ["یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنج‌شنبه","جمعه","شنبه"];
+  var wd = weekdays[dateObj.getDay()];
+
+  return wd + " " + jY + "/" + jM + "/" + jD;
+}
+
+// گرفتن آرایه ۱۴تایی از لیبل‌های شمسی از روی program_date
+function getJalaliDateLabels(programDateStr){
+  if(!programDateStr) return Array(14).fill(null);
+  var parts = programDateStr.split("-");
+  var y = parseInt(parts[0],10);
+  var m = parseInt(parts[1],10)-1;
+  var d = parseInt(parts[2],10);
+  var base = new Date(y,m,d);
+  var labels = [];
+  for(var i=1;i<=14;i++){
+    var dd = new Date(base);
+    dd.setDate(base.getDate()+i);
+    labels.push(formatJalaliLabelFromGregorianDate(dd));
+  }
+  return labels;
+}
+
+// لیبل شمسی یک "روز nام برنامه"
+function getJalaliLabelForDay(programDateStr, dayNumber){
+  var labels = getJalaliDateLabels(programDateStr);
+  return labels[dayNumber-1] || ("روز "+dayNumber);
+}
+
 // برنامه فعلی برای فرم‌ها: از «امروز» شروع می‌کنیم
 var currentProgramStartDate = new Date().toISOString().slice(0,10);
 var currentProgramDateLabels = getDateLabelsFromProgramDate(currentProgramStartDate);
@@ -1526,10 +1614,14 @@ document.addEventListener("DOMContentLoaded", function(){
   applyModeFromStorage();
   initPersonalityWizard();
 
-  var attBody=document.getElementById("attendanceBody");
+    var attBody=document.getElementById("attendanceBody");
+  // مبنا = امروز؛ روز ۱ برنامه = فردا
+  var todayIso = new Date().toISOString().slice(0,10);
+  var jalaliLabelsForForm = getJalaliDateLabels(todayIso);
+
   for(var d=1;d<=14;d++){
     var tr=document.createElement("tr");
-    var label = (currentProgramDateLabels && currentProgramDateLabels[d-1]) ? currentProgramDateLabels[d-1] : ("روز "+d);
+    var label = jalaliLabelsForForm[d-1] || ("روز "+d);
     tr.innerHTML=
       '<td style="text-align:center">'+label+'</td>'+
       '<td><select class="att-select" data-day="'+d+'">'+
@@ -1538,6 +1630,7 @@ document.addEventListener("DOMContentLoaded", function(){
       '</select></td>';
     attBody.appendChild(tr);
   }
+
 
   document.getElementById("examsCards").addEventListener("click",function(e){
     if(e.target.classList.contains("delete-exam-card")){
@@ -2743,8 +2836,8 @@ async function onMakePlanClicked(){
     return;
   }
 
-  var programDate=new Date().toISOString().slice(0,10);
-  var dateLabels = getDateLabelsFromProgramDate(programDate);
+   var programDate=new Date().toISOString().slice(0,10);
+  var dateLabels = getJalaliDateLabels(programDate);
   var result=buildPlan(s,dateLabels,planMode);
 
   document.getElementById("scheduleTable").innerHTML=result.html;
@@ -2965,7 +3058,8 @@ function renderStudentTasksFiltered(){
     if(filter!=="all" && String(t.day)!==filter) continue;
 
     var st=t.status || (t.done?TASK_STATUS.DONE:TASK_STATUS.TODO);
-    var label=labels[t.day-1] || ("روز "+t.day);
+    var label = getJalaliLabelForDay(currentStudentPlanDate, t.day);
+
     var badgeHtml="";
     if(st===TASK_STATUS.DONE) badgeHtml='<span class="badge done">انجام شده</span>';
     else if(st===TASK_STATUS.PARTIAL) badgeHtml='<span class="badge partial">ناقص</span>';
@@ -3171,16 +3265,19 @@ async function loadBacklogView(){
 
       var dayIndex=t.day-1;
       if(dayIndex<0 || dayIndex>=14) continue;
-      var dLabel=labels[dayIndex];
-      if(!dLabel) continue;
-      var datePart=dLabel.split(" ")[1];
-      var parts=datePart.split("/");
-      var yy=parseInt(parts[0],10);
-      var mm=parseInt(parts[1],10)-1;
-      var dd=parseInt(parts[2],10);
+
+      // محاسبه تاریخ واقعی این روز از روی program_date (میلادی)
+      var baseParts = p.program_date.split("-");
+      var yy=parseInt(baseParts[0],10);
+      var mm=parseInt(baseParts[1],10)-1;
+      var dd=parseInt(baseParts[2],10);
       var dt=new Date(yy,mm,dd);
+      dt.setDate(dt.getDate()+t.day); // روز 1 = فردای program_date
       dt.setHours(0,0,0,0);
-      if(dt>=today) continue;
+      if(dt>=today) continue; // فقط عقب‌مانده‌های قبل از امروز
+
+      // لیبل شمسی برای نمایش
+      var dLabel = getJalaliLabelForDay(p.program_date, t.day);
 
       backlogRows.push({
         plan_id:p.id,
@@ -3192,7 +3289,7 @@ async function loadBacklogView(){
         leftover:t.leftover||0
       });
     }
-  }
+
 
   if(!backlogRows.length){
     table.innerHTML="<tr><td>در حال حاضر عقب‌ماندگی ثبت‌شده‌ای وجود ندارد (یا همه انجام شده‌اند).</td></tr>";
@@ -3300,7 +3397,7 @@ async function loadAdminTasks(planId,studentName,programDate){
     if(st===TASK_STATUS.DONE) badge='<span class="badge done">انجام شده</span>';
     else if(st===TASK_STATUS.PARTIAL) badge='<span class="badge partial">ناقص</span>';
     else badge='<span class="badge todo">انجام‌نشده</span>';
-    var label = labels[t.day-1] || ("روز "+t.day);
+    var label = getJalaliLabelForDay(programDate, t.day);
     html+='<tr>'+
       '<td style="text-align:center">'+label+'</td>'+
       '<td>'+t.task_text+'</td>'+
