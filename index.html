@@ -1498,6 +1498,7 @@ async function handleLogin(){
 
   // ۱) لود پروفایل (معارفه + تیپ شخصیت)
   await loadIntroAndPersonality(email);
+  console.log("DEBUG intro_done =", window._introDone);
 
   // ۲) بقیه چیزها مثل قبل
   applyModeFromStorage && applyModeFromStorage();
@@ -1510,19 +1511,9 @@ async function handleLogin(){
   loadBacklogView();
   tryAutoDailyReport && tryAutoDailyReport();
 
-  // تصمیم‌گیری: اگر معارفه انجام نشده، اول برو روی تب معارفه
-  if(!window._introDone){
-    document.getElementById("introTabBtn").style.display = "inline-flex";
-    showTab("introTab");
-  }else{
-    document.getElementById("introTabBtn").style.display = "none";
-    // تست شخصیت اگر اجازه داشته باشد
-    if(canShowPersonalityTab()){
-      showTab("personalityTab");
-    }else{
-      showTab("plannerTab");
-    }
-  }
+// موقتاً همیشه تب معارفه را نشان بده تا تست کنیم
+document.getElementById("introTabBtn").style.display = "inline-flex";
+showTab("introTab");
 }
 
 /* ===== ثابت‌ها و توابع عمومی ===== */
