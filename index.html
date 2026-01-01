@@ -2,1663 +2,6 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8" />
-<title>برنامه‌ریز ۱۴ روزه کنکور</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-<style>
-/* -------------- پایه مدرن + تم‌ها -------------- */
-
-:root {
-  --bg: #f3f4f6;
-  --bg-soft: #eef2ff;
-  --card-bg: #ffffff;
-  --card-elevated: #f9fafb;
-  --primary: #2563eb;
-  --primary-soft: rgba(37, 99, 235, 0.1);
-  --primary-soft-strong: rgba(37, 99, 235, 0.14);
-  --border-soft: #e5e7eb;
-  --border-strong: #d1d5db;
-  --text-main: #111827;
-  --text-muted: #6b7280;
-  --text-softer: #9ca3af;
-  --danger: #ef4444;
-  --danger-soft: rgba(239, 68, 68, 0.08);
-  --success: #16a34a;
-  --success-soft: rgba(22, 163, 74, 0.09);
-  --radius-lg: 18px;
-  --radius-md: 12px;
-  --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
-  --shadow-subtle: 0 8px 24px rgba(15, 23, 42, 0.04);
-  --input-bg: #f9fafb;
-}
-
-/* وسواسی دقیق: سبز آرام و بسیار مرتب */
-body.theme-obsessive {
-  --primary: #0f766e;
-  --primary-soft: rgba(15, 118, 110, 0.1);
-  --primary-soft-strong: rgba(15, 118, 110, 0.16);
-  --bg-soft: #ecfdf5;
-}
-
-/* پرتلاش اما فرار: نارنجی پرانرژی */
-body.theme-runner {
-  --primary: #f97316;
-  --primary-soft: rgba(249, 115, 22, 0.12);
-  --primary-soft-strong: rgba(249, 115, 22, 0.18);
-  --bg-soft: #fff7ed;
-}
-
-/* آهسته و پیوسته: همان تم پیش‌فرض آرام و آبی */
-body.theme-steady {
-  /* از default استفاده می‌کند */
-}
-
-/* قهرمان دقیقه نودی: بنفش/صورتی هیجانی */
-body.theme-lastminute {
-  --primary: #9333ea;
-  --primary-soft: rgba(147, 51, 234, 0.12);
-  --primary-soft-strong: rgba(147, 51, 234, 0.18);
-  --bg-soft: #faf5ff;
-}
-
-/* حالت تیره سراسری */
-body.dark-mode {
-  --bg: #050816;
-  --bg-soft: #020617;
-  --card-bg: #0b1020;
-  --card-elevated: #020617;
-  --border-soft: #1f2937;
-  --border-strong: #374151;
-  --text-main: #e5e7eb;
-  --text-muted: #9ca3af;
-  --text-softer: #6b7280;
-  --danger-soft: rgba(239, 68, 68, 0.16);
-  --success-soft: rgba(34, 197, 94, 0.18);
-  --input-bg: #020617;
-  --shadow-soft: 0 25px 80px rgba(0, 0, 0, 0.85);
-  --shadow-subtle: 0 18px 40px rgba(15, 23, 42, 0.7);
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma,
-    sans-serif;
-  background: radial-gradient(circle at top left, rgba(129,140,248,0.25) 0, transparent 40%),
-    radial-gradient(circle at bottom right, rgba(236,72,153,0.18) 0, transparent 45%),
-    var(--bg);
-  color: var(--text-main);
-}
-
-/* -------------- شِل اصلی اپ -------------- */
-
-.container {
-  max-width: 1180px;
-  margin: 24px auto 40px auto;
-  background: linear-gradient(135deg, #ffffff, #f9fafb);
-  border-radius: 26px;
-  padding: 22px 24px 26px 24px;
-  box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(148, 163, 184, 0.16);
-}
-
-body.dark-mode .container {
-  background: radial-gradient(circle at top, #020617 0, #020617 60%);
-  border-color: rgba(15, 23, 42, 0.9);
-}
-
-/* لاگین کارت */
-
-#loginContainer {
-  max-width: 480px;
-  margin-top: 60px;
-  padding: 28px 26px 26px 26px;
-  border-radius: 24px;
-}
-
-body.dark-mode #loginContainer {
-  background: radial-gradient(circle at top, #0b1120 0, #020617 65%);
-}
-
-#loginContainer h2 {
-  margin-bottom: 18px;
-  font-weight: 700;
-}
-
-#loginContainer input {
-  width: 100%;
-}
-
-#loginStatus {
-  padding: 6px 10px;
-  border-radius: 10px;
-}
-
-/* هدر اپ */
-
-.app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 18px;
-}
-
-.app-title {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: radial-gradient(circle at left, var(--primary-soft-strong), transparent);
-  color: var(--text-main);
-  padding: 10px 16px;
-  border-radius: 20px;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.app-title span.logo-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 999px;
-  background: var(--primary);
-  box-shadow: 0 0 0 4px var(--primary-soft);
-}
-
-.user-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--primary-soft);
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 11px;
-  color: var(--text-main);
-  border: 1px solid rgba(129, 140, 248, 0.4);
-}
-
-/* -------------- تب‌ها -------------- */
-
-.tab-bar {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 4px;
-  background: var(--card-elevated);
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  margin-bottom: 14px;
-}
-
-.tab-btn {
-  border-radius: 999px !important;
-  background: transparent;
-  color: var(--text-muted);
-  padding-inline: 12px;
-  font-size: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  border: none;
-}
-
-.tab-btn.active {
-  background: var(--primary);
-  color: #fff;
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.2);
-}
-
-/* -------------- سکشن‌ها / کارت‌ها -------------- */
-
-section {
-  border-radius: var(--radius-lg);
-  padding: 14px 16px 12px 16px;
-  margin-bottom: 12px;
-  background: var(--card-bg);
-  border: 1px solid var(--border-soft);
-  box-shadow: var(--shadow-subtle);
-}
-
-body.dark-mode section {
-  background: radial-gradient(circle at top left, rgba(79,70,229,0.18), transparent 50%),
-              radial-gradient(circle at bottom right, rgba(236,72,153,0.18), transparent 55%),
-              var(--card-bg);
-  border-color: rgba(31,41,55,0.9);
-}
-
-section h3 {
-  margin-top: 0;
-  margin-bottom: 4px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-section h3::after {
-  content: "";
-  flex-grow: 1;
-  height: 1px;
-  margin-right: 8px;
-  background: linear-gradient(
-    90deg,
-    rgba(148, 163, 184, 0.5),
-    transparent 60%
-  );
-}
-
-/* -------------- فرم‌ها / اینپوت‌ها -------------- */
-
-label {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-input,
-select,
-textarea {
-  padding: 7px 8px;
-  margin: 3px 0 7px 0;
-  border-radius: 10px;
-  border: 1px solid var(--border-soft);
-  font-size: 12px;
-  outline: none;
-  background: var(--input-bg);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease,
-    background-color 0.15s ease;
-  color: var(--text-main);
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: var(--primary);
-  background: #ffffff;
-  box-shadow: 0 0 0 1px var(--primary-soft);
-}
-
-body.dark-mode input:focus,
-body.dark-mode select:focus,
-body.dark-mode textarea:focus {
-  background: #020617;
-}
-
-input[type="number"] {
-  width: 90px;
-}
-
-textarea {
-  resize: vertical;
-}
-
-input[type="radio"],
-input[type="checkbox"] {
-  width: auto;
-  accent-color: var(--primary);
-}
-
-/* -------------- دکمه‌ها -------------- */
-
-.btn {
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  padding: 7px 14px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25);
-  transition: transform 0.12s ease, box-shadow 0.12s ease,
-    background-color 0.12s ease, opacity 0.12s ease;
-}
-
-.btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.35);
-  opacity: 0.96;
-}
-
-.btn:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.25);
-}
-
-.small-btn {
-  background: #4b5563;
-  color: #fff;
-  border: none;
-  padding: 4px 9px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 11px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  transition: background-color 0.15s ease, transform 0.1s ease;
-}
-
-.small-btn:hover {
-  background: #374151;
-  transform: translateY(-0.5px);
-}
-
-.small-btn.del {
-  background: #b91c1c;
-}
-
-.small-btn.del:hover {
-  background: #7f1d1d;
-}
-
-/* -------------- جدول‌ها -------------- */
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 11.5px;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  background: var(--card-elevated);
-}
-
-th,
-td {
-  border: 1px solid rgba(209, 213, 219, 0.8);
-  padding: 6px 7px;
-  vertical-align: top;
-}
-
-th {
-  background: linear-gradient(135deg, var(--primary), #111827);
-  color: #f9fafb;
-  font-weight: 500;
-}
-
-.table-soft th {
-  background: #f3f4f6;
-  color: var(--text-main);
-}
-
-body.dark-mode .table-soft th {
-  background: #020617;
-  color: #e5e7eb;
-}
-
-table tr:nth-child(even) td {
-  background: rgba(249, 250, 251, 0.9);
-}
-
-body.dark-mode table tr:nth-child(even) td {
-  background: #020617;
-}
-
-.sub-table th {
-  font-size: 11px;
-  padding: 5px 6px;
-}
-
-/* -------------- layout های داخلی -------------- */
-
-.row-flex {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.row-flex > div {
-  min-width: 160px;
-  flex: 1 1 160px;
-}
-
-/* -------------- تگ‌ها و بَدج‌ها -------------- */
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 10px;
-  background: #e5e7eb;
-  color: #374151;
-  gap: 4px;
-}
-
-.badge.done {
-  background: var(--success-soft);
-  color: var(--success);
-}
-
-.badge.todo {
-  background: var(--danger-soft);
-  color: var(--danger);
-}
-
-.badge.partial {
-  background: rgba(244, 114, 182, 0.12);
-  color: #be185d;
-}
-
-/* -------------- چیزهای ریز -------------- */
-
-.task-block {
-  margin-bottom: 6px;
-  padding: 6px 8px;
-  border-radius: 10px;
-  background: #f9fafb;
-  border: 1px dashed rgba(209, 213, 219, 0.9);
-}
-
-body.dark-mode .task-block {
-  background: #020617;
-  border-color: rgba(75,85,99,0.9);
-}
-
-.task-block:last-child {
-  margin-bottom: 0;
-}
-
-.hidden {
-  display: none;
-}
-
-#coverageSummary {
-  font-size: 11px;
-  margin-top: 6px;
-  color: var(--text-muted);
-  background: var(--primary-soft);
-  padding: 6px 8px;
-  border-radius: 999px;
-  display: inline-block;
-}
-
-/* جدول تیپ شخصیت */
-
-.personality-table td {
-  border: none;
-  padding: 5px 6px;
-}
-
-.personality-table th {
-  background: var(--primary);
-}
-
-.personality-scale-header {
-  font-size: 11px;
-  text-align: center;
-  color: #f9fafb;
-}
-
-/* کارت آزمون‌ها */
-
-.exam-card {
-  border-radius: 14px;
-  border: 1px solid var(--border-soft);
-  background: #f9fafb;
-  padding: 10px 10px 8px 10px;
-  margin-top: 8px;
-}
-
-body.dark-mode .exam-card {
-  background: #020617;
-}
-
-/* ویزارد آزمون شخصیت */
-
-.personality-step-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 8px 0;
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.personality-progress {
-  flex: 1;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(148, 163, 184, 0.35);
-  overflow: hidden;
-}
-
-.personality-progress-inner {
-  height: 100%;
-  width: 0;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--primary), #ec4899);
-  transition: width 0.2s ease;
-}
-
-.personality-actions {
-  margin-top: 8px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.personality-actions .btn {
-  flex: 1;
-  justify-content: center;
-}
-
-.personality-actions .small-btn {
-  min-width: 80px;
-}
-
-/* ریسپانسیو */
-
-@media (max-width: 768px) {
-  .container {
-    margin: 12px;
-    padding: 18px 14px 20px 14px;
-    border-radius: 22px;
-  }
-
-  .app-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .tab-bar {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
-</style>
-</head>
-<body class="theme-steady">
-<!-- لاگین -->
-<div id="loginContainer" class="container">
-  <h2 style="text-align:center;margin-bottom:10px;">ورود به سامانه برنامه‌ریز</h2>
-  <div style="max-width:320px;margin:auto;">
-    <label>ایمیل</label><br>
-    <input id="loginEmail" type="email" placeholder="مثلاً student@example.com"><br>
-    <label>پسورد (حداقل ۶ کاراکتر)</label><br>
-    <input id="loginPassword" type="password"><br>
-    <button class="btn" style="width:100%;justify-content:center;margin-top:6px;" onclick="handleLogin()">ورود به حساب</button>
-    <div id="loginStatus" style="font-size:11px;color:#b30000;margin-top:6px;"></div>
-  </div>
-</div>
-
-<!-- اپ اصلی -->
-<div id="appContainer" class="container hidden">
-  <div class="app-header">
-    <h1 class="app-title">
-      <span class="logo-dot"></span>
-      <span>برنامه‌ریز ۱۴ روزه کنکور</span>
-    </h1>
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-      <button class="small-btn" id="modeToggleBtn" onclick="toggleMode()">🌙 حالت تیره</button>
-      <span id="currentUserEmail" class="user-chip"></span>
-      <button class="small-btn" onclick="logout()">خروج</button>
-    </div>
-  </div>
-
-  <!-- تب‌ها -->
-  <div class="tab-bar">
-    <button class="btn tab-btn active" id="personalityTabBtn" onclick="showTab('personalityTab')">🧬 آزمون شخصیت</button>
-    <button class="btn tab-btn" id="plannerTabBtn" onclick="showTab('plannerTab')">🧠 ساخت برنامه</button>
-    <button class="btn tab-btn" id="studentTabBtn" onclick="showTab('studentTab')">✅ برنامه‌های من</button>
-    <button class="btn tab-btn" id="backlogTabBtn" onclick="showTab('backlogTab')">📦 عقب‌ماندگی‌ها</button>
-    <button class="btn tab-btn" id="adminTabBtn" style="display:none;" onclick="showTab('adminTab')">🛠 پنل ادمین</button>
-  </div>
-
-  <!-- تب آزمون شخصیت -->
-  <div id="personalityTab">
-    <section>
-      <h3>🧬 آزمون شخصیت مطالعه</h3>
-      <p id="personalityInfo" style="font-size:11px;color:#444;">
-        این آزمون برای تیپ‌بندی سبک مطالعه شماست تا برنامه‌ها بر اساس شخصیتتان تنظیم شوند.
-        لطفاً به همه‌ی سؤالات با دقت و صداقت پاسخ بده.
-      </p>
-
-      <div class="personality-step-header">
-        <span id="personalityStepLabel">سؤال ۱ از ۱۶</span>
-        <div class="personality-progress">
-          <div id="personalityProgressInner" class="personality-progress-inner"></div>
-        </div>
-      </div>
-
-      <table class="personality-table table-soft">
-        <tr>
-          <th>سؤال</th>
-          <th class="personality-scale-header">کاملاً مخالفم</th>
-          <th class="personality-scale-header">مخالفم</th>
-          <th class="personality-scale-header">نظری ندارم</th>
-          <th class="personality-scale-header">موافقم</th>
-          <th class="personality-scale-header">کاملاً موافقم</th>
-        </tr>
-
-        <!-- سؤالات ۱ تا ۱۶ دقیقا مثل قبل -->
-        <!-- ۱ -->
-        <tr>
-          <td>۱. وقتی برنامه‌ی دقیقی دارم، اگر حتی یک کارش انجام نشود، تا آخر روز فکرم درگیر می‌ماند.</td>
-          <td><input type="radio" name="q1" value="1"></td>
-          <td><input type="radio" name="q1" value="2"></td>
-          <td><input type="radio" name="q1" value="3"></td>
-          <td><input type="radio" name="q1" value="4"></td>
-          <td><input type="radio" name="q1" value="5"></td>
-        </tr>
-
-        <!-- ۲ -->
-        <tr>
-          <td>۲. اگر یک روز برنامه‌ام خراب شود، معمولاً می‌گویم «بی‌خیال، از فردا جدی شروع می‌کنم».</td>
-          <td><input type="radio" name="q2" value="1"></td>
-          <td><input type="radio" name="q2" value="2"></td>
-          <td><input type="radio" name="q2" value="3"></td>
-          <td><input type="radio" name="q2" value="4"></td>
-          <td><input type="radio" name="q2" value="5"></td>
-        </tr>
-
-        <!-- ۳ -->
-        <tr>
-          <td>۳. ترجیح می‌دهم هر روز کمی پیش بروم تا اینکه همه چیز را بگذارم برای روزهای آخر.</td>
-          <td><input type="radio" name="q3" value="1"></td>
-          <td><input type="radio" name="q3" value="2"></td>
-          <td><input type="radio" name="q3" value="3"></td>
-          <td><input type="radio" name="q3" value="4"></td>
-          <td><input type="radio" name="q3" value="5"></td>
-        </tr>
-
-        <!-- ۴ -->
-        <tr>
-          <td>۴. معمولاً بخش زیادی از درس‌هایم را نزدیک آزمون یا امتحان انجام می‌دهم.</td>
-          <td><input type="radio" name="q4" value="1"></td>
-          <td><input type="radio" name="q4" value="2"></td>
-          <td><input type="radio" name="q4" value="3"></td>
-          <td><input type="radio" name="q4" value="4"></td>
-          <td><input type="radio" name="q4" value="5"></td>
-        </tr>
-
-        <!-- ۵ -->
-        <tr>
-          <td>۵. اگر یک مبحث را کامل و بی‌نقص نبینم/نزنم، حس می‌کنم اصلاً آن مبحث را بلد نیستم.</td>
-          <td><input type="radio" name="q5" value="1"></td>
-          <td><input type="radio" name="q5" value="2"></td>
-          <td><input type="radio" name="q5" value="3"></td>
-          <td><input type="radio" name="q5" value="4"></td>
-          <td><input type="radio" name="q5" value="5"></td>
-        </tr>
-
-        <!-- ۶ -->
-        <tr>
-          <td>۶. شروع کردن برایم سخت است؛ اما وقتی شروع کنم، معمولاً جدی و متمرکز جلو می‌روم.</td>
-          <td><input type="radio" name="q6" value="1"></td>
-          <td><input type="radio" name="q6" value="2"></td>
-          <td><input type="radio" name="q6" value="3"></td>
-          <td><input type="radio" name="q6" value="4"></td>
-          <td><input type="radio" name="q6" value="5"></td>
-        </tr>
-
-        <!-- ۷ -->
-        <tr>
-          <td>۷. دوست دارم حجم برنامه‌ام طوری باشد که با خیال راحت بتوانم روزانه انجامش دهم، نه فشرده و استرسی.</td>
-          <td><input type="radio" name="q7" value="1"></td>
-          <td><input type="radio" name="q7" value="2"></td>
-          <td><input type="radio" name="q7" value="3"></td>
-          <td><input type="radio" name="q7" value="4"></td>
-          <td><input type="radio" name="q7" value="5"></td>
-        </tr>
-
-        <!-- ۸ -->
-        <tr>
-          <td>۸. بارها شده برنامه‌ریزی عالی داشته باشم، اما وسط کار بزنم زیرش و بگویم «حوصله ندارم».</td>
-          <td><input type="radio" name="q8" value="1"></td>
-          <td><input type="radio" name="q8" value="2"></td>
-          <td><input type="radio" name="q8" value="3"></td>
-          <td><input type="radio" name="q8" value="4"></td>
-          <td><input type="radio" name="q8" value="5"></td>
-        </tr>
-
-        <!-- ۹ -->
-        <tr>
-          <td>۹. از جمع شدن عقب‌ماندگی‌ها خیلی می‌ترسم و دوست دارم آن‌ها را هرچه زودتر صفر کنم.</td>
-          <td><input type="radio" name="q9" value="1"></td>
-          <td><input type="radio" name="q9" value="2"></td>
-          <td><input type="radio" name="q9" value="3"></td>
-          <td><input type="radio" name="q9" value="4"></td>
-          <td><input type="radio" name="q9" value="5"></td>
-        </tr>
-
-        <!-- ۱۰ -->
-        <tr>
-          <td>۱۰. معمولاً در روزهای آخر قبل از آزمون، بیشتر از روزهای عادی تلاش می‌کنم.</td>
-          <td><input type="radio" name="q10" value="1"></td>
-          <td><input type="radio" name="q10" value="2"></td>
-          <td><input type="radio" name="q10" value="3"></td>
-          <td><input type="radio" name="q10" value="4"></td>
-          <td><input type="radio" name="q10" value="5"></td>
-        </tr>
-
-        <!-- ۱۱ -->
-        <tr>
-          <td>۱۱. اگر برنامه خیلی فشرده باشد، احتمال این‌که رهایش کنم زیاد است.</td>
-          <td><input type="radio" name="q11" value="1"></td>
-          <td><input type="radio" name="q11" value="2"></td>
-          <td><input type="radio" name="q11" value="3"></td>
-          <td><input type="radio" name="q11" value="4"></td>
-          <td><input type="radio" name="q11" value="5"></td>
-        </tr>
-
-        <!-- ۱۲ -->
-        <tr>
-          <td>۱۲. معمولاً ترجیح می‌دهم اول عقب‌ماندگی‌هایم را جمع کنم بعد سراغ پیشروی بروم.</td>
-          <td><input type="radio" name="q12" value="1"></td>
-          <td><input type="radio" name="q12" value="2"></td>
-          <td><input type="radio" name="q12" value="3"></td>
-          <td><input type="radio" name="q12" value="4"></td>
-          <td><input type="radio" name="q12" value="5"></td>
-        </tr>
-
-        <!-- ۱۳ -->
-        <tr>
-          <td>۱۳. اهل «از همین امروز یک مقدار شروع کنم» هستم، حتی اگر حس کنم کامل آماده نیستم.</td>
-          <td><input type="radio" name="q13" value="1"></td>
-          <td><input type="radio" name="q13" value="2"></td>
-          <td><input type="radio" name="q13" value="3"></td>
-          <td><input type="radio" name="q13" value="4"></td>
-          <td><input type="radio" name="q13" value="5"></td>
-        </tr>
-
-        <!-- ۱۴ -->
-        <tr>
-          <td>۱۴. وقتی استرس می‌گیرم، تمایل دارم بعضی کارها را هی عقب بیندازم.</td>
-          <td><input type="radio" name="q14" value="1"></td>
-          <td><input type="radio" name="q14" value="2"></td>
-          <td><input type="radio" name="q14" value="3"></td>
-          <td><input type="radio" name="q14" value="4"></td>
-          <td><input type="radio" name="q14" value="5"></td>
-        </tr>
-
-        <!-- ۱۵ -->
-        <tr>
-          <td>۱۵. ترجیح می‌دهم به‌جای جمع کردن کارها، هر روز مقدار مشخصی کار ثابت داشته باشم.</td>
-          <td><input type="radio" name="q15" value="1"></td>
-          <td><input type="radio" name="q15" value="2"></td>
-          <td><input type="radio" name="q15" value="3"></td>
-          <td><input type="radio" name="q15" value="4"></td>
-          <td><input type="radio" name="q15" value="5"></td>
-        </tr>
-
-        <!-- ۱۶ -->
-        <tr>
-          <td>۱۶. وقتی فشار امتحان نزدیک می‌شود، تازه حس می‌کنم انگیزه‌ی اصلی‌ام روشن شده.</td>
-          <td><input type="radio" name="q16" value="1"></td>
-          <td><input type="radio" name="q16" value="2"></td>
-          <td><input type="radio" name="q16" value="3"></td>
-          <td><input type="radio" name="q16" value="4"></td>
-          <td><input type="radio" name="q16" value="5"></td>
-        </tr>
-      </table>
-
-      <div class="personality-actions">
-        <button type="button" class="small-btn" id="personalityPrevBtn">قبلی</button>
-        <button type="button" class="btn" id="personalityNextBtn">سؤال بعدی</button>
-      </div>
-
-      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn" onclick="computePersonality()">محاسبه تیپ</button>
-        <button class="btn" id="savePersonalityBtn" onclick="savePersonality()" disabled>ثبت تیپ در حساب من</button>
-      </div>
-      <div id="personalityResult" style="font-size:12px;color:#333;margin-top:8px;"></div>
-    </section>
-  </div>
-
-  <!-- تب برنامه‌ریز -->
-  <div id="plannerTab" class="hidden">
-
-    <!-- ۰. نوع برنامه -->
-    <section>
-      <h3>۰. انتخاب نوع برنامه</h3>
-      <p style="font-size:11px;color:#444">
-        🔹 <b>برنامه عادی:</b> بدون استفاده از تیپ شخصیت، الگوریتم پایه و یکنواخت.<br>
-        🔹 <b>برنامه بر اساس تیپ شخصیت:</b> از تیپ ثبت‌شده در آزمون استفاده می‌کند
-        (وسواسی، پرتلاش‌فرار، آهسته‌پیوسته، دقیقه‌نودی) و رنگ و ریتم خود اپ هم با تیپت هماهنگ می‌شود.<br>
-        🔹 گزینه‌ی «هوش مصنوعی» را بعداً کامل می‌کنیم.
-      </p>
-      <label>نوع برنامه:</label>
-      <select id="planMode">
-        <option value="normal">برنامه عادی</option>
-        <option value="personality">برنامه بر اساس تیپ شخصیت</option>
-        <option value="ai" disabled>برنامه بر اساس هوش مصنوعی (به زودی)</option>
-      </select>
-    </section>
-
-    <!-- ۱. اطلاعات پایه -->
-    <section>
-      <h3>۱. اطلاعات پایه دانش‌آموز</h3>
-      <p style="font-size:11px;color:#b30000;">همۀ فیلدهای این بخش اجباری هستند.</p>
-      <div class="row-flex">
-        <div>
-          <label>نام</label><br>
-          <input id="fname" type="text">
-        </div>
-        <div>
-          <label>نام خانوادگی</label><br>
-          <input id="lname" type="text">
-        </div>
-        <div>
-          <label>شماره موبایل</label><br>
-          <input id="phone" type="text" placeholder="مثلاً 09123456789">
-        </div>
-        <div>
-          <label>شهر</label><br>
-          <input id="city" type="text">
-        </div>
-        <div>
-          <label>نام مدرسه</label><br>
-          <input id="school" type="text">
-        </div>
-        <div>
-          <label>پایه تحصیلی</label><br>
-          <select id="grade">
-            <option value="">انتخاب کنید</option>
-            <option>دهم</option>
-            <option>یازدهم</option>
-            <option>دوازدهم</option>
-          </select>
-        </div>
-        <div>
-          <label>رشته تحصیلی</label><br>
-          <select id="major">
-            <option value="">انتخاب کنید</option>
-            <option>تجربی</option>
-            <option>ریاضی</option>
-            <option>انسانی</option>
-          </select>
-        </div>
-      </div>
-    </section>
-
-    <!-- ۲. ساعات مطالعه کلی -->
-    <section>
-      <h3>۲. ساعات مطالعه کلی</h3>
-      <div class="row-flex">
-        <div>
-          <label>ساعت مطالعه در روز سفید (بدون مدرسه و کلاس)</label><br>
-          <input id="whiteDay" type="number" step="0.5" min="0" max="15" value="8">
-        </div>
-        <div>
-          <label>ساعت مطالعه در روز مدرسه (بدون کلاس بیرون)</label><br>
-          <input id="schoolDay" type="number" step="0.5" min="0" max="10" value="4">
-        </div>
-      </div>
-    </section>
-
-    <!-- ۳. وضعیت مدرسه -->
-    <section>
-      <h3>۳. وضعیت مدرسه در ۱۴ روز آینده</h3>
-      <table class="sub-table table-soft">
-        <tr><th>روز</th><th>می‌رود مدرسه؟</th></tr>
-        <tbody id="attendanceBody"></tbody>
-      </table>
-    </section>
-
-    <!-- ۴. کلاس‌های آنلاین -->
-    <section>
-      <h3>۴. کلاس‌های آنلاین</h3>
-      <p style="font-size:11px;color:#444">
-        کلاس‌های آنلاین هم به‌صورت تسک در برنامه می‌آیند؛ اگر تیک نخوری، در برنامه بعدی به‌عنوان فیلم آفلاین عقب‌افتاده حساب می‌شوند.
-      </p>
-      <button class="small-btn" onclick="addClassRow()">➕ افزودن کلاس</button>
-      <table class="sub-table table-soft">
-        <tr>
-          <th>روز</th><th>درس</th><th>مدت (ساعت)</th><th>فصل</th><th>حذف</th>
-        </tr>
-        <tbody id="classesBody"></tbody>
-      </table>
-    </section>
-
-    <!-- ۵. آزمون‌ها -->
-    <section>
-      <h3>۵. آزمون‌ها در ۱۴ روز آینده</h3>
-      <p style="font-size:11px;color:#444">
-        برای هر آزمون، می‌توانی چند فصل و چند منبع تست تعریف کنی و اگر بخواهی تحلیل آزمون هم انجام شود.
-      </p>
-      <button class="small-btn" onclick="addExamCard()">➕ افزودن آزمون</button>
-      <div id="examsCards"></div>
-    </section>
-
-    <!-- ۶. فیلم‌های آفلاین -->
-    <section>
-      <h3>۶. فیلم‌های آفلاین عقب‌افتاده</h3>
-      <p style="font-size:11px;color:#444">
-        اینجا ترکیب عقب‌ماندگی‌های قدیمی + مواردی است که خودت اضافه می‌کنی. قبل از ساخت برنامه، می‌توانی چیزهایی را که دیگر عقب‌مانده نیست حذف کنی.
-      </p>
-      <button class="small-btn" onclick="addOfflineRow()">➕ افزودن فیلم آفلاین</button>
-      <table class="sub-table table-soft">
-        <tr>
-          <th>درس</th><th>فصل</th><th>مدت (ساعت)</th><th>حذف</th>
-        </tr>
-        <tbody id="offlineBody"></tbody>
-      </table>
-    </section>
-
-    <!-- ۷. تست‌های عقب‌مانده -->
-    <section>
-      <h3>۷. تست‌های عقب‌مانده</h3>
-      <p style="font-size:11px;color:#444">
-        این هم ترکیب تست‌هایی است که از برنامه‌های قبلی جا مانده + تست‌هایی که خودت به عنوان عقب‌ماندگی تعریف می‌کنی.
-      </p>
-      <button class="small-btn" onclick="addLagRow()">➕ افزودن تست عقب‌مانده</button>
-      <table class="sub-table table-soft">
-        <tr>
-          <th>درس</th><th>فصل</th><th>منبع تست</th><th>تعداد تست</th><th>حذف</th>
-        </tr>
-        <tbody id="lagBody"></tbody>
-      </table>
-    </section>
-
-    <!-- ۸. پیشروی -->
-    <section>
-      <h3>۸. پیشروی پیشنهادی</h3>
-      <button class="small-btn" onclick="addProgRow()">➕ افزودن هدف پیشروی</button>
-      <table class="sub-table table-soft">
-        <tr>
-          <th>درس</th><th>فصل</th><th>منبع تست</th><th>تعداد تست</th><th>حذف</th>
-        </tr>
-        <tbody id="progBody"></tbody>
-      </table>
-    </section>
-
-    <!-- ۹. ترازها -->
-    <section>
-      <h3>۹. تراز/درصد میانگین دروس اختصاصی</h3>
-      <p style="font-size:11px;color:#444">برای تشخیص نقطه قوت و ضعف.</p>
-      <div class="row-flex">
-        <div>
-          <label>تراز زیست</label><br>
-          <input id="rankBio" type="number" step="10">
-        </div>
-        <div>
-          <label>تراز شیمی</label><br>
-          <input id="rankChem" type="number" step="10">
-        </div>
-        <div>
-          <label>تراز فیزیک</label><br>
-          <input id="rankPhys" type="number" step="10">
-        </div>
-        <div>
-          <label>تراز ریاضی</label><br>
-          <input id="rankMath" type="number" step="10">
-        </div>
-      </div>
-    </section>
-
-    <!-- ۱۰. ساخت برنامه -->
-    <section>
-      <h3>۱۰. ساخت برنامه</h3>
-      <button class="btn" onclick="onMakePlanClicked()">✅ ساخت برنامه ۱۴ روزه و ذخیره در Supabase</button>
-      <span id="statusMsg" style="font-size:11px;color:#b30000;margin-right:10px;"></span>
-    </section>
-
-    <!-- نمایش برنامه -->
-    <section>
-      <h3>برنامه ۱۴ روزه</h3>
-      <div id="coverageSummary"></div>
-      <table id="scheduleTable" class="table-soft"></table>
-    </section>
-
-  </div>
-
-  <!-- تب برنامه‌های من (دانش‌آموز) -->
-  <div id="studentTab" class="hidden">
-    <section>
-      <h3>برنامه‌های من</h3>
-      <p style="font-size:11px;color:#444">
-        روی هر برنامه کلیک کن تا تسک‌های همان برنامه را ببینی و تیک بزنی.
-      </p>
-      <table id="studentPlansTable" class="sub-table table-soft"></table>
-    </section>
-
-    <section>
-      <h3>تسک‌های برنامه انتخاب‌شده</h3>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px;flex-wrap:wrap;">
-        <p id="studentTasksInfo" style="font-size:11px;color:#444;margin:0;"></p>
-        <div style="font-size:11px;">
-          فیلتر روز:
-          <select id="studentDayFilter" onchange="renderStudentTasksFiltered()">
-            <option value="all">همه روزها</option>
-            <option value="1">روز ۱</option>
-            <option value="2">روز ۲</option>
-            <option value="3">روز ۳</option>
-            <option value="4">روز ۴</option>
-            <option value="5">روز ۵</option>
-            <option value="6">روز ۶</option>
-            <option value="7">روز ۷</option>
-            <option value="8">روز ۸</option>
-            <option value="9">روز ۹</option>
-            <option value="10">روز ۱۰</option>
-            <option value="11">روز ۱۱</option>
-            <option value="12">روز ۱۲</option>
-            <option value="13">روز ۱۳</option>
-            <option value="14">روز ۱۴</option>
-          </select>
-          <button class="small-btn" onclick="showInstantReport()">📊 گزارش لحظه‌ای</button>
-        </div>
-      </div>
-      <table id="studentTasksTable" class="sub-table table-soft"></table>
-      <div id="instantReportBox" style="font-size:11px;color:#333;margin-top:6px;"></div>
-    </section>
-  </div>
-
-  <!-- تب عقب‌ماندگی‌ها -->
-  <div id="backlogTab" class="hidden">
-    <section>
-      <h3>📦 عقب‌ماندگی‌های ثبت شده</h3>
-      <p style="font-size:11px;color:#444">
-        این‌ها تسک‌هایی هستند که تاریخ‌شان گذشته و کامل انجام نشده‌اند (انجام‌نشده یا ناقص).
-        برای برنامه بعدی، از این‌ها به عنوان عقب‌ماندگی استفاده می‌شود.
-      </p>
-      <button class="small-btn" onclick="loadBacklogView()">🔄 به‌روزرسانی لیست عقب‌ماندگی</button>
-      <table id="backlogTable" class="sub-table table-soft"></table>
-    </section>
-  </div>
-
-  <!-- تب پنل ادمین -->
-  <div id="adminTab" class="hidden">
-    <section>
-      <h3>لیست برنامه‌های دانش‌آموزان</h3>
-      <table id="adminPlansTable" class="sub-table table-soft"></table>
-    </section>
-    <section>
-      <h3>تسک‌های برنامه انتخاب‌شده</h3>
-      <p id="adminPlanTitle" style="font-size:11px;color:#444;"></p>
-      <table id="adminTasksTable" class="sub-table table-soft"></table>
-
-      <div style="margin-top:10px;">
-        <h4>➕ افزودن تسک دستی به این برنامه</h4>
-        <label>روز (۱ تا ۱۴): </label>
-        <input id="adminNewTaskDay" type="number" min="1" max="14" value="1"><br>
-        <label>متن تسک:</label><br>
-        <textarea id="adminNewTaskText" style="width:100%;height:60px;"></textarea><br>
-        <button class="small-btn" onclick="adminAddTask()">افزودن تسک</button>
-      </div>
-    </section>
-  </div>
-
-</div>
-
-<!-- Supabase + JS -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-// ====== تنظیمات Supabase ======
-var supabaseUrl = "https://uregjguhgbzwgwlzqbef.supabase.co";
-var supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyZWdqZ3VoZ2J6d2d3bHpxYmVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxMTE5OTQsImV4cCI6MjA4MjY4Nzk5NH0.Gsqi4NKf4SssTVzTdC4AvIJCoynC31prHK_Gr7fZCzI";
-var supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-// ایمیل ادمین
-var ADMIN_EMAILS = ["pouri007008009@gmail.com"];
-
-// وضعیت‌های تسک
-var TASK_STATUS = {
-  TODO: "todo",
-  PARTIAL: "partial",
-  DONE: "done"
-};
-
-// تیپ شخصیت فعلی کاربر (از پروفایل)
-var currentPersonalityType = null;      // "obsessive" | "runner" | "steady" | "lastminute"
-var currentPersonalityUpdated = null;   // "YYYY-MM-DD"
-var computedPersonalityType = null;
-
-var PERSONALITY_LABELS = {
-  obsessive: "وسواسی دقیق",
-  runner: "پرتلاش اما فرار",
-  steady: "آهسته و پیوسته",
-  lastminute: "قهرمان دقیقه نودی"
-};
-
-var PERSONALITY_DESCRIPTIONS = {
-  obsessive: "تمرکز بالا روی کامل‌کردن کارها، حساس نسبت به عقب‌ماندگی و نقص در برنامه.",
-  runner: "تلاش‌گر اما فرّار از شروع؛ نیاز به مرورهای کوتاه و انگیزه‌ی مداوم.",
-  steady: "ریتم ثابت، دوست‌دار برنامه‌ی یکنواخت و بدون نوسان شدید.",
-  lastminute: "انرژی اصلی نزدیک ددلاین و آزمون روشن می‌شود؛ حجم بیشتر در هفته‌ی دوم بهتر جواب می‌دهد."
-};
-
-// این‌هارو برای رندر مجدد استفاده می‌کنیم
-var currentStudentPlanId = null;
-var currentStudentPlanDate = null;
-var currentStudentTasks = []; // {id, day, task_text, status, leftover}
-var backlogPrefilled = false;
-var currentAdminPlanId = null;
-var currentAdminStudentName = "";
-var currentAdminProgramDate = "";
-
-// ==== نقشه تأثیر سؤالات آزمون بر تیپ‌ها ====
-var personalityConfig = {
-  q1: {obsessive:2},
-  q2: {runner:2},
-  q3: {steady:2},
-  q4: {lastminute:2},
-  q5: {obsessive:2},
-  q6: {runner:1, steady:1},
-  q7: {steady:2},
-  q8: {runner:2},
-  q9: {obsessive:2},
-  q10:{lastminute:2},
-  q11:{steady:1, runner:1},
-  q12:{obsessive:1, steady:1},
-  q13:{steady:2},
-  q14:{runner:1,lastminute:1},
-  q15:{steady:2},
-  q16:{lastminute:2}
-};
-
-// متغیرهای ویزارد آزمون شخصیت
-var personalityRows = [];
-var personalityCurrent = 0;
-
-// ===== تم شخصیتی (جدید) =====
-function applyPersonalityTheme(type){
-  var body = document.body;
-  body.classList.remove("theme-steady","theme-obsessive","theme-runner","theme-lastminute");
-  if(type === "obsessive") body.classList.add("theme-obsessive");
-  else if(type === "runner") body.classList.add("theme-runner");
-  else if(type === "lastminute") body.classList.add("theme-lastminute");
-  else body.classList.add("theme-steady");
-}
-
-// ===== دارک‌مود =====
-function applyModeFromStorage(){
-  var body = document.body;
-  var mode = localStorage.getItem("planner-mode") || "dark";
-  if(mode === "dark"){
-    body.classList.add("dark-mode");
-  } else {
-    body.classList.remove("dark-mode");
-  }
-  updateModeToggleText();
-}
-
-function toggleMode(){
-  var body = document.body;
-  var isDark = !body.classList.contains("dark-mode");
-  if(isDark){
-    body.classList.add("dark-mode");
-    localStorage.setItem("planner-mode","dark");
-  }else{
-    body.classList.remove("dark-mode");
-    localStorage.setItem("planner-mode","light");
-  }
-  updateModeToggleText();
-}
-
-function updateModeToggleText(){
-  var btn = document.getElementById("modeToggleBtn");
-  if(!btn) return;
-  if(document.body.classList.contains("dark-mode")){
-    btn.textContent = "☀ حالت روشن";
-  } else {
-    btn.textContent = "🌙 حالت تیره";
-  }
-}
-
-// ویزارد آزمون شخصیت
-function initPersonalityWizard(){
-  var table = document.querySelector(".personality-table");
-  if(!table) return;
-  var trs = Array.from(table.querySelectorAll("tr"));
-  personalityRows = trs.slice(1);
-  if(!personalityRows.length) return;
-  personalityCurrent = 0;
-  updatePersonalityWizardUI();
-
-  var prevBtn = document.getElementById("personalityPrevBtn");
-  var nextBtn = document.getElementById("personalityNextBtn");
-  if(prevBtn){
-    prevBtn.onclick = function(){
-      if(personalityCurrent>0){
-        personalityCurrent--;
-        updatePersonalityWizardUI();
-      }
-    };
-  }
-  if(nextBtn){
-    nextBtn.onclick = function(){
-      if(!isCurrentQuestionAnswered()){
-        alert("لطفاً به این سؤال پاسخ بده بعد برو سراغ بعدی 🙂");
-        return;
-      }
-      if(personalityCurrent < personalityRows.length-1){
-        personalityCurrent++;
-        updatePersonalityWizardUI();
-      }else{
-        computePersonality();
-      }
-    };
-  }
-}
-
-function isCurrentQuestionAnswered(){
-  var row = personalityRows[personalityCurrent];
-  if(!row) return true;
-  var radios = row.querySelectorAll('input[type="radio"]');
-  for(var i=0;i<radios.length;i++){
-    if(radios[i].checked) return true;
-  }
-  return false;
-}
-
-function updatePersonalityWizardUI(){
-  if(!personalityRows || !personalityRows.length) return;
-
-  personalityRows.forEach(function(tr){ tr.style.display="none"; });
-  var row = personalityRows[personalityCurrent];
-  if(row) row.style.display="";
-
-  var stepLabel = document.getElementById("personalityStepLabel");
-  var progInner = document.getElementById("personalityProgressInner");
-  var prevBtn = document.getElementById("personalityPrevBtn");
-  var nextBtn = document.getElementById("personalityNextBtn");
-
-  var total = personalityRows.length;
-  var step = personalityCurrent + 1;
-
-  if(stepLabel) stepLabel.textContent = "سؤال "+step+" از "+total;
-  if(progInner) progInner.style.width = (step*100/total)+"%";
-  if(prevBtn) prevBtn.disabled = (personalityCurrent===0);
-  if(nextBtn){
-    if(personalityCurrent===total-1){
-      nextBtn.textContent = "مشاهده نتیجه";
-    }else{
-      nextBtn.textContent = "سؤال بعدی";
-    }
-  }
-}
-
-// ===== تب‌ها =====
-function showTab(tabId){
-  ["personalityTab","plannerTab","studentTab","backlogTab","adminTab"].forEach(function(id){
-    document.getElementById(id).classList.add("hidden");
-  });
-  document.getElementById(tabId).classList.remove("hidden");
-
-  // حالت فعال روی دکمه‌ها
-  var btns = document.querySelectorAll(".tab-btn");
-  btns.forEach(function(b){ b.classList.remove("active"); });
-  if(tabId === "personalityTab") document.getElementById("personalityTabBtn").classList.add("active");
-  if(tabId === "plannerTab") document.getElementById("plannerTabBtn").classList.add("active");
-  if(tabId === "studentTab") document.getElementById("studentTabBtn").classList.add("active");
-  if(tabId === "backlogTab") document.getElementById("backlogTabBtn").classList.add("active");
-  if(tabId === "adminTab") document.getElementById("adminTabBtn").classList.add("active");
-}
-
-// ===== لاگین =====
-async function handleLogin(){
-  var email = document.getElementById("loginEmail").value.trim();
-  var pass  = document.getElementById("loginPassword").value;
-  var status= document.getElementById("loginStatus");
-  status.style.color="#b30000";
-  status.textContent="";
-
-  if(!email){
-    status.textContent="ایمیل را وارد کن.";
-    return;
-  }
-  if(!pass || pass.length<6){
-    status.textContent="پسورد باید حداقل ۶ کاراکتر باشد.";
-    return;
-  }
-
-  var res = await supabase.auth.signInWithPassword({email:email,password:pass});
-  if(res.error){
-    status.textContent="خطا در ورود: "+res.error.message;
-    return;
-  }
-
-  document.getElementById("loginContainer").classList.add("hidden");
-  document.getElementById("appContainer").classList.remove("hidden");
-  document.getElementById("currentUserEmail").textContent = "کاربر: "+email;
-
-  if(ADMIN_EMAILS.indexOf(email)>=0){
-    document.getElementById("adminTabBtn").style.display="inline-flex";
-  }
-
-  // پروفایل شخصیت را لود کن
-  await loadPersonalityProfile(email);
-
-  showTab("personalityTab");
-  loadStudentPlans();
-  if(ADMIN_EMAILS.indexOf(email)>=0){
-    loadAdminPlans();
-  }
-  prefillBacklogFromAllPlans();
-  loadBacklogView();
-}
-
-async function logout(){
-  await supabase.auth.signOut();
-  location.reload();
-}
-
-// ===== ثابت‌ها و توابع عمومی =====
-var SOURCE_MIN_PER_QUESTION = {
-  "خیلی سبز": 1.67,
-  "نردبام": 2.25,
-  "مبتکران": 2.0,
-  "نشرالگو": 1.67,
-  "سه سطحی": 1.67,
-  "QB": 2.0,
-  "موج آزمون": 1.67,
-  "فصل آزمون": 1.67,
-  "IQ": 2.0,
-  "میکرو گاج": 1.67,
-  "تیتانیوم": 2.25
-};
-
-function studyRatio(subject){
-  if(subject==="زیست")  return 0.40;
-  if(subject==="شیمی")  return 0.30;
-  if(subject==="فیزیک") return 0.20;
-  if(subject==="ریاضی") return 0.20;
-  return 0;
-}
-
-function detectStrongWeak(stats){
-  if(!stats) return {strong:"زیست",weak:"ریاضی"};
-  var arr=[];
-  if(stats.biology && stats.biology.avgRank>0)   arr.push({key:"زیست",  rank:stats.biology.avgRank});
-  if(stats.chemistry && stats.chemistry.avgRank>0) arr.push({key:"شیمی",  rank:stats.chemistry.avgRank});
-  if(stats.physics && stats.physics.avgRank>0)   arr.push({key:"فیزیک", rank:stats.physics.avgRank});
-  if(stats.math && stats.math.avgRank>0)      arr.push({key:"ریاضی", rank:stats.math.avgRank});
-  if(!arr.length) return {strong:"زیست",weak:"ریاضی"};
-  arr.sort(function(a,b){return b.rank-a.rank;});
-  return {strong:arr[0].key,weak:arr[arr.length-1].key};
-}
-
-function parseDurationToHours(str){
-  if(!str) return 0;
-  str=String(str).trim();
-  if(str.indexOf("min")>-1){
-    var m=parseInt(str,10); return m/60;
-  }
-  if(str.indexOf("h")>-1){
-    return parseFloat(str);
-  }
-  var n=parseFloat(str); return isNaN(n)?0:n;
-}
-
-function formatHoursWithMinutes(h){
-  h = Math.max(0, h);
-  var hrsFloat = h;
-  var hrs = Math.floor(hrsFloat);
-  var mins = Math.round((hrsFloat - hrs)*60);
-  if(mins % 5 !== 0){
-    mins = mins + (5 - (mins % 5));
-  }
-  if(mins === 60){
-    hrs += 1;
-    mins = 0;
-  }
-  var hText = hrsFloat.toFixed(1);
-  if(hText.endsWith(".0")) hText = hText.slice(0,-2);
-  var totalMin = hrs*60 + mins;
-  if(hrs>0 || mins>0){
-    return hText+' ساعت ('+totalMin+' دقیقه)';
-  }else{
-    return '0 دقیقه';
-  }
-}
-
-// تعداد فصل‌ها
-var SUBJECT_CHAPTER_COUNT = {
-  "زیست": 8,
-  "شیمی": 4,
-  "فیزیک": 4,
-  "ریاضی": 7,
-  "ادبیات": 18,
-  "دینی": 12,
-  "عربی": 8,
-  "زبان": 4
-};
-
-function getChapterOptionsForSubject(subj){
-  var n = SUBJECT_CHAPTER_COUNT[subj] || 10;
-  var html = "";
-  for(var i=1;i<=n;i++){
-    html += '<option value="فصل '+i+'">فصل '+i+'</option>';
-  }
-  return html;
-}
-
-function updateTopicOptions(selectEl, topicClass){
-  var subj = selectEl.value;
-  var row  = selectEl.closest("tr") || selectEl.closest(".exam-card") || selectEl.closest("div");
-  var topicSel;
-  if(topicClass){
-    topicSel = row.querySelector("."+topicClass);
-  }else{
-    topicSel = row.querySelector("select");
-  }
-  if(!topicSel) return;
-  var prev = topicSel.value;
-  topicSel.innerHTML = getChapterOptionsForSubject(subj);
-  var exists=false;
-  for(var i=0;i<topicSel.options.length;i++){
-    if(topicSel.options[i].value===prev){ exists=true; break;}
-  }
-  if(exists) topicSel.value=prev;
-}
-
-// لیبل تاریخ‌ها از روی program_date
-function getDateLabelsFromProgramDate(programDateStr){
-  if(!programDateStr) return Array(14).fill(null);
-  var parts = programDateStr.split("-");
-  var y = parseInt(parts[0],10);
-  var m = parseInt(parts[1],10)-1;
-  var d = parseInt(parts[2],10);
-  var base = new Date(y,m,d);
-  var weekdays = ["یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنج‌شنبه","جمعه","شنبه"];
-  var labels=[];
-  for(var i=1;i<=14;i++){
-    var dd = new Date(base);
-    dd.setDate(base.getDate()+i);
-    var wd = weekdays[dd.getDay()];
-    var yy = dd.getFullYear();
-    var mm = (dd.getMonth()+1).toString().padStart(2,'0');
-    var da = dd.getDate().toString().padStart(2,'0');
-    labels.push(wd+" "+yy+"/"+mm+"/"+da);
-  }
-  return labels;
-}
-
-// ===== ساخت جدول وضعیت مدرسه =====
-document.addEventListener("DOMContentLoaded", function(){
-  applyPersonalityTheme("steady");
-  applyModeFromStorage();
-  initPersonalityWizard();
-
-  var attBody=document.getElementById("attendanceBody");
-  for(var d=1;d<=14;d++){
-    var tr=document.createElement("tr");
-    tr.innerHTML=
-      '<td style="text-align:center">'+d+'</td>'+
-      '<td><select class="att-select" data-day="'+d+'">'+
-      '<option value="بله">بله (مدرسه می‌رود)</option>'+
-      '<option value="خیر">خیر</option>'+
-      '</select></td>';
-    attBody.appendChild(tr);
-  }
-
-  document.getElementById("examsCards").addEventListener("click",function(e){
-    if(e.target.classList.contains("delete-exam-card")){
-      var card=e.target.closest(".exam-card");
-      if(card) card.remove();
-    }
-  });
-});
-
-// ===== افزودن ردیف‌ها =====
-function addClassRow(){
-  var tbody=document.getElementById("classesBody");
-  var tr=document.createElement("tr");
-  tr.innerHTML=
-    '<td><input type="number" class="class-day" min="1" max="14" value="1"></td>'+
-    '<td><select class="class-subject" onchange="updateTopicOptions(this, \'class-topic\')">'+
-      '<option>زیست</option><option>شیمی</option><option>فیزیک</option><option>ریاضی</option>'+
-      '<option>ادبیات</option><option>دینی</option><option>عربی</option><option>زبان</option>'+
-    '</select></td>'+
-    '<td><input type="number" step="0.5" class="class-duration" value="2"></td>'+
-    '<td><select class="class-topic"></select></td>'+
-    '<td><button type="button" class="small-btn del" onclick="this.closest(\'tr\').remove()">حذف</button></td>';
-  tbody.appendChild(tr);
-  var subjSel=tr.querySelector(".class-subject");
-  updateTopicOptions(subjSel,"class-topic");
-}
-
-function addExamCard(){
-  var container=document.getElementById("examsCards");
-  var div=document.createElement("div");
-  div.className="exam-card";
-  div.innerHTML=
-    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'+
-      '<strong>آزمون جدید</strong>'+
-      '<button type="button" class="small-btn del delete-exam-card">حذف آزمون</button>'+
-    '</div>'+
-    'روز آزمون: <input type="number" class="exam-day" min="1" max="14" value="14"> '+
-    'درس: <select class="exam-subject" onchange="refreshExamChapters(this)">'+
-      '<option>زیست</option><option>شیمی</option><option>فیزیک</option><option>ریاضی</option>'+
-      '<option>ادبیات</option><option>دینی</option><option>عربی</option><option>زبان</option>'+
-    '</select> '+
-    'نوع: <select class="exam-type">'+
-      '<option>آزمون آزمایشی</option>'+
-      '<option>امتحان مدرسه</option>'+
-      '<option>امتحان کلاس بیرون</option>'+
-    '</select> '+
-    'مدت: <select class="exam-duration">'+
-      '<option value="30min">۳۰ دقیقه</option>'+
-      '<option value="45min">۴۵ دقیقه</option>'+
-      '<option value="60min">۱ ساعت</option>'+
-      '<option value="90min">۱.۵ ساعت</option>'+
-      '<option value="120min">۲ ساعت</option>'+
-      '<option value="180min">۳ ساعت</option>'+
-    '</select>'+
-    '<br><br>'+
-    'مطالعه/تست در خود روز آزمون مجاز باشد؟ '+
-    '<input type="checkbox" class="exam-allow-today" checked> '+
-    '🔍 تحلیل آزمون؟ <input type="checkbox" class="exam-analysis-need"> '+
-    'اولین روز مجاز برای تحلیل: <input type="number" class="exam-analysis-start" min="1" max="14" value="14">'+
-    '<hr style="margin:6px 0;">'+
-    '<div><strong>فصل‌ها:</strong> <button type="button" class="small-btn" onclick="addExamChapter(this)">➕ فصل</button>'+
-    '<div class="exam-chapters-box" style="margin-top:4px;"></div></div>'+
-    '<hr style="margin:6px 0;">'+
-    '<div><strong>منابع تست:</strong> <button type="button" class="small-btn" onclick="addExamSource(this)">➕ منبع تست</button>'+
-    '<div class="exam-sources-box" style="margin-top:4px;"></div></div>';
-  container.appendChild(div);
-}
-
-function refreshExamChapters(subjSelect){
-  var card=subjSelect.closest(".exam-card");
-  var subj=subjSelect.value;
-  var boxes=card.querySelectorAll(".exam-chapter");
-  for(var i=0;i<boxes.length;i++){
-    var sel=boxes[i];
-    var prev=sel.value;
-    sel.innerHTML=getChapterOptionsForSubject(subj);
-    var exists=false;
-    for(var j=0;j<sel.options.length;j++){
-      if(sel.options[j].value===prev){exists=true;break;}
-    }
-    if(exists) sel.value=prev;
-  }
-}
-
-function addExamChapter(btn){
-  var box=btn.parentElement.querySelector(".exam-chapters-box");
-  var card=btn.closest(".exam-card");
-  var subj=card.querySelector(".exam-subject").value;
-  var d=document.createElement("div");
-  d.innerHTML=
-    'فصل: <select class="exam-chapter">'+getChapterOptionsForSubject(subj)+'</select> '+
-    '<button type="button" class="small-btn del" onclick="this.parentElement.remove()">حذف</button>';
-  box.appendChild(d);
-}
-
-function addExamSource(btn){
-  var box=btn.parentElement.querySelector(".exam-sources-box");
-  var d=document.createElement("div");
-  d.innerHTML=
-    'منبع: <select class="exam-source">'+
-      '<option>خیلی سبز</option><option>نردبام</option><option>مبتکران</option>'+
-      '<option>نشرالگو</option><option>سه سطحی</option><option>QB</option>'+
-      '<option>موج آزمون</option><option>فصل آزمون</option><option>IQ</option>'+
-      '<option>میکرو گاج</option><option>تیتانیوم</option>'+
-    '</select> '+
-    'تعداد تست: <input type="number" class="exam-count" min="10" step="10" value="100"> '+
-    '<button type="button" class="small-btn del" onclick="this.parentElement.remove()">حذف</button>';
-  box.appendChild(d);
-}
-
-function addOfflineRow(){
-  var tbody=document.getElementById("offlineBody");
-  var tr=document.createElement("tr");
-  tr.innerHTML=
-    '<td><select class="off-subject" onchange="updateTopicOptions(this, \'off-topic\')">'+
-      '<option>زیست</option><option>شیمی</option><option>فیزیک</option><option>ریاضی</option>'+
-      '<option>ادبیات</option><option>دینی</option><option>عربی</option><option>زبان</option>'+
-    '</select></td>'+
-    '<td><select class="off-topic"></select></td>'+
-    '<td><input type="number" step="0.5" class="off-hours" value="2"></td>'+
-    '<td><button type="button" class="small-btn del" onclick="this.closest(\'tr\').remove()">حذف</button></td>';
-  tbody.appendChild(tr);
-  updateTopicOptions(tr.querySelector(".off-subject"),"off-topic");
-}
-
-function addLagRow(){
-  var tbody=document.getElementById("lagBody");
-  var tr=document.createElement("tr");
-  tr.innerHTML=
-    '<td><select class="lag-subject" onchange="updateTopicOptions(this, \'lag-topic\')">'+
-      '<option>زیست</option><option>شیمی</option><option>فیزیک</option><option>ریاضی</option>'+
-    '</select></td>'+
-    '<td><select class="lag-topic"></select></td>'+
-    '<td><select class="lag-source">'+
-      '<option>خیلی سبز</option><option>نردبام</option><option>مبتکران</option>'+
-      '<option>نشرالگو</option><option>سه سطحی</option><option>QB</option>'+
-      '<option>موج آزمون</option><option>فصل آزمون</option><option>IQ</option>'+
-      '<option>میکرو گاج</option><option>تیتانیوم</option>'+
-    '</select></td>'+
-    '<td><input type="number" class="lag-count" min="10" step="10" value="80"></td>'+
-    '<td><button type="button" class="small-btn del" onclick="this.closest(\'tr\').remove()">حذف</button></td>';
-  tbody.appendChild(tr);
-  updateTopicOptions(tr.querySelector(".lag-subject"),"lag-topic");
-}
-
-function addProgRow(){
-  var tbody=document.getElementById("progBody");
-  var tr=document.createElement("tr");
-  tr.innerHTML=
-    '<td><select class="prog-subject" onchange="updateTopicOptions(this, \'prog-topic\')">'+
-      '<option>زیست</option><option>شیمی</option><option>فیزیک</option><option>ریاضی</option>'+
-    '</select></td>'+
-    '<td><select class="prog-topic"></select></td>'+
-    '<td><select class="prog-source">'+
-      '<option>خیلی سبز</option><option>نردبام</option><option>مبتکران</option>'+
-      '<option>نشرالگو</option><option>سه سطحی</option><option>QB</option>'+
-      '<option>موج آزمون</option><option>فصل آزمون</option><option>IQ</option>'+
-      '<option>میکرو گاج</option><option>تیتانیوم</option>'+
-    '</select></td>'+
-    '<td><input type="number" class="prog-count" min="10" step="10" value="100"></td>'+
-    '<td><button type="button" class="small-btn del" onclick="this.closest(\'tr\').remove()">حذف</button></td>';
-  tbody.appendChild(tr);
-  updateTopicOptions(tr.querySelector(".prog-subject"),"prog-topic");
-}
-
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-<meta charset="UTF-8" />
 <title>گروه مشاوره‌ای دارت</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
